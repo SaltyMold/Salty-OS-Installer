@@ -12,12 +12,12 @@
 :root{
   --bg:#161818;--panel:#232424;--panel2:#2c2d2d;--ink:#dadbdb;--mute:#9b9d9d;--line:#383a3a;
   --acc:#2f7dc0;--acc-d:#256aa5;--acc-s:rgba(47,125,192,.2);--acc-t:#7ab8ee;--ok:#2fb67c;
-  --logo:#ffb734;--r:20px;color-scheme:dark;
+  --logo:#ffb734;--r:20px;color-scheme:dark;--okt:#3ecf8e;--bad:#ff6369;--bad-s:rgba(255,99,105,.14);--ok-s:rgba(47,182,124,.15);
   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
 }
 :root[data-theme=light]{
   --bg:#f2f3f3;--panel:#fff;--panel2:#ebecec;--ink:#1f2222;--mute:#666a6a;--line:#dcdede;
-  --acc-s:rgba(47,125,192,.13);--acc-t:#256aa5;color-scheme:light;
+  --acc-s:rgba(47,125,192,.13);--acc-t:#256aa5;color-scheme:light;--okt:#177a50;--bad:#d1242f;--bad-s:rgba(209,36,47,.1);--ok-s:rgba(23,122,80,.12);
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -118,16 +118,43 @@ select,input[type=text]{font:inherit;padding:8px 10px;border:1px solid var(--lin
 #toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:99px;opacity:0;pointer-events:none;transition:.2s;font-size:13px;max-width:90vw;z-index:30}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 
-#tmgr{margin-top:12px}
+#tmgr{margin:12px 0}
 #tmgr h2 small{color:var(--mute);font-weight:400;font-size:13px}
 #tmgr h2.sec{margin-top:20px}
-.tlist{display:flex;gap:8px;flex-wrap:wrap}
-.tchip{display:inline-flex;align-items:center;background:var(--panel2);border:1px solid transparent;border-radius:10px;overflow:hidden}
-.tchip.on{border-color:var(--acc);background:var(--acc-s)}
-.tsel{background:transparent;color:var(--ink);border-radius:0;padding:7px 8px 7px 14px;font-weight:500}
-.tdel{background:transparent;color:var(--mute);border-radius:0;padding:7px 11px 7px 4px;font-size:16px;line-height:1}
-.tdel:hover:not(:disabled){color:var(--ink);filter:none}
-.tact{display:flex;gap:8px;margin-top:12px}
+.thead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px 24px;flex-wrap:wrap;margin-bottom:16px}
+.thead h2{margin:0}
+.tmeter{flex:0 1 320px;min-width:230px}
+.tmtop{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:12.5px;color:var(--mute);margin-bottom:7px}
+.tmtop b{font-family:var(--mono);font-weight:600;font-size:13px;color:var(--okt);transition:color .2s}
+.tmbar{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.tmbar i{display:block;height:100%;width:0;border-radius:inherit;background:var(--ok);transition:width .25s,background .2s}
+.tmeter.over .tmtop b{color:var(--bad)}
+.tmeter.over .tmbar i{background:var(--bad)}
+.twarn{margin:0 0 14px;padding:9px 13px;border-radius:10px;background:var(--bad-s);color:var(--bad);font-size:13px;font-weight:500}
+.tlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.tcard{position:relative;display:flex;border:1.5px solid var(--line);border-radius:14px;background:var(--panel2);transition:border-color .12s,background .12s,box-shadow .12s}
+.tcard:hover{border-color:var(--mute)}
+.tcard.on{border-color:var(--acc);background:var(--acc-s);box-shadow:0 0 0 3px var(--acc-s)}
+.tsel{flex:1;min-width:0;display:flex;align-items:center;gap:12px;padding:10px 40px 10px 10px;background:transparent;color:var(--ink);border-radius:13px;text-align:left;font-weight:500}
+.tsel:hover:not(:disabled){filter:none}
+.tsel:focus-visible,.tdel:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.tth{flex:none;width:58px;height:44px;border-radius:8px;border:1px solid var(--line);overflow:hidden;display:flex;flex-direction:column}
+.tth i{display:block}
+.tth .tb{flex:0 0 20%}
+.tth .tw{flex:1;background-position:center;background-size:cover}
+.tinfo{display:flex;flex-direction:column;min-width:0;line-height:1.35}
+.tinfo b{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tinfo small{color:var(--mute);font-family:var(--mono);font-size:12px}
+.tdel{position:absolute;top:7px;right:7px;width:26px;height:26px;padding:0;border-radius:8px;background:transparent;color:var(--mute);font-size:18px;line-height:1;opacity:.7}
+.tcard:hover .tdel,.tdel:focus-visible{opacity:1}
+.tdel:hover:not(:disabled){background:var(--bad-s);color:var(--bad);filter:none;opacity:1}
+.plist{display:flex;gap:8px;flex-wrap:wrap}
+.tact{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.tact button{display:inline-flex;align-items:center;gap:7px}
+.tact .grow{flex:1}
+#p-theme .act{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:10px 14px}
+.tsize{font-family:var(--mono);font-size:13px;font-weight:600;padding:6px 13px;border-radius:99px;color:var(--okt);background:var(--ok-s);white-space:nowrap;transition:color .2s,background .2s}
+.tsize.over{color:var(--bad);background:var(--bad-s)}
 .pre::before{content:'+ '}
 .pre.done::before{content:'✓ '}
 .hint{margin:16px 0 0;color:var(--mute);font-size:13px}
@@ -202,20 +229,29 @@ select,input[type=text]{font:inherit;padding:8px 10px;border:1px solid var(--lin
           <div class="badges"><span class="badge b-gray bState"></span><span class="badge b-red bModel"></span><span class="badge b-yel bSerial"></span></div>
           <p class="sub"><span data-i="themeHint"></span></p>
         </div>
-        <div class="act"><button class="cta connectBtn" data-i="connect"></button><button class="cta" id="go-theme" hidden></button></div>
+        <div class="act"><button class="cta connectBtn" data-i="connect"></button><span class="tsize" id="tSize" role="status" aria-live="polite"></span><button class="cta" id="go-theme" hidden></button></div>
         <div class="bar" id="b-theme"><i></i></div><div class="pt" id="t-theme"></div>
       </div>
     <div class="card" id="tmgr">
-      <h2><span data-i="myThemes"></span> <small id="tCount"></small></h2>
+      <div class="thead">
+        <h2><span data-i="myThemes"></span> <small id="tCount"></small></h2>
+        <div class="tmeter" id="tMeter" role="progressbar" aria-valuemin="0" aria-valuemax="2048" aria-valuenow="0">
+          <div class="tmtop"><span data-i="space"></span><b id="tMeterTxt"></b></div>
+          <div class="tmbar"><i id="tMeterFill"></i></div>
+        </div>
+      </div>
+      <p class="twarn" id="tOver" role="alert" hidden></p>
       <div class="tlist" id="tlist"></div>
-      <div class="tact"><button class="ghost" id="tNew" data-i="newTheme"></button><button class="ghost" id="tDup" data-i="dup"></button></div>
+      <div class="tact">
+        <button class="ghost" id="tNew"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span data-i="newTheme"></span></button>
+        <button class="ghost" id="tDup"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/></svg><span data-i="dup"></span></button>
+        <span class="grow"></span>
+        <button class="ghost" id="imp"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M5 20h14"/></svg><span data-i="imp"></span></button><input type="file" id="in-zip" accept=".zip" multiple hidden>
+        <button class="ghost" id="exp"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M5 20h14"/></svg><span data-i="exp"></span></button>
+      </div>
       <h2 class="sec" data-i="presets"></h2>
-      <div class="tlist" id="presets"></div>
+      <div class="plist" id="presets"></div>
       <p class="hint" data-i="themeNote"></p>
-    </div>
-    <div class="toolbar">
-      <button class="ghost" id="imp" data-i="imp"></button><input type="file" id="in-zip" accept=".zip" multiple hidden>
-      <button class="ghost" id="exp" data-i="exp"></button>
     </div>
     <div class="cols">
       <div class="stack">
@@ -256,13 +292,15 @@ const IDS=[{vendorId:0x0483,productId:0xDF11},{vendorId:0x0483,productId:0xA291}
 const PAGE=0x1000, THEME_ADDR=0x901F0000, THEME_MAX=2*1024*1024;
 let dev=null,busy=false,devModel=null,devSerial='';
 
-const LANGS={"fr": {"tApp": "Applications", "tTheme": "Thèmes", "connect": "Connecter", "off": "Non connectée", "busy": "En cours…", "installOS": "Installer SaltyOS", "installApp": "Installer ABLauncher", "installTheme": "Installer", "imp": "Importer zip", "exp": "Enregistrer zip", "name": "Nom", "circle": "Cercle", "hover": "Fond au survol", "palette": "Palette", "wall": "Fond d'écran", "icons": "Icônes", "choose": "Choisir", "none": "Aucun", "noUsb": "WebUSB indisponible", "disc": "Déconnectée", "connFail": "Connexion impossible : ", "fail": "Échec : ", "erase": "Effacement", "write": "Écriture", "done": "Terminé", "dfuErr": "Erreur DFU", "badDfu": "Fichier .dfu invalide", "tooBig": "Thème trop volumineux", "missing": "Fichier manquant : ", "notFound": " introuvable", "dlFail": "Téléchargement impossible", "readFail": "Lecture impossible", "noExt": "Firmware incompatible", "badHdr": "Firmware corrompu", "dl": "Téléchargement…", "read": "Lecture…", "link": "Liaison…", "noSpace": "Espace insuffisant", "badZip": "Zip invalide", "badPal": "Palette invalide", "needName": "Nom requis", "badImg": "Image illisible"}, "en": {"tApp": "Apps", "tTheme": "Themes", "connect": "Connect", "off": "Not connected", "busy": "Working…", "installOS": "Install SaltyOS", "installApp": "Install ABLauncher", "installTheme": "Install", "imp": "Import zip", "exp": "Save zip", "name": "Name", "circle": "Circle", "hover": "Hover background", "palette": "Palette", "wall": "Wallpaper", "icons": "Icons", "choose": "Choose", "none": "None", "noUsb": "WebUSB unavailable", "disc": "Disconnected", "connFail": "Connection failed: ", "fail": "Failed: ", "erase": "Erasing", "write": "Writing", "done": "Done", "dfuErr": "DFU error", "badDfu": "Invalid .dfu file", "tooBig": "Theme too large", "missing": "Missing file: ", "notFound": " not found", "dlFail": "Download failed", "readFail": "Read failed", "noExt": "Incompatible firmware", "badHdr": "Corrupted firmware", "dl": "Downloading…", "read": "Reading…", "link": "Linking…", "noSpace": "Not enough space", "badZip": "Invalid zip", "badPal": "Invalid palette", "needName": "Name required", "badImg": "Unreadable image"}};
+const LANGS={"fr": {"tApp": "Applications", "tTheme": "Thèmes", "connect": "Connecter", "off": "Non connectée", "busy": "En cours…", "installOS": "Installer SaltyOS", "installApp": "Installer ABLauncher", "installTheme": "Installer", "imp": "Importer zip", "exp": "Enregistrer zip", "name": "Nom", "circle": "Cercle", "hover": "Fond au survol", "palette": "Palette", "wall": "Fond d'écran", "icons": "Icônes", "choose": "Choisir", "none": "Aucun", "noUsb": "WebUSB indisponible", "disc": "Déconnectée", "connFail": "Connexion impossible : ", "fail": "Échec : ", "erase": "Effacement", "write": "Écriture", "done": "Terminé", "dfuErr": "Erreur DFU", "badDfu": "Fichier .dfu invalide", "tooBig": "Thèmes trop volumineux", "kib": "Kio", "missing": "Fichier manquant : ", "notFound": " introuvable", "dlFail": "Téléchargement impossible", "readFail": "Lecture impossible", "noExt": "Firmware incompatible", "badHdr": "Firmware corrompu", "dl": "Téléchargement…", "read": "Lecture…", "link": "Liaison…", "noSpace": "Espace insuffisant", "badZip": "Zip invalide", "badPal": "Palette invalide", "needName": "Nom requis", "badImg": "Image illisible"}, "en": {"tApp": "Apps", "tTheme": "Themes", "connect": "Connect", "off": "Not connected", "busy": "Working…", "installOS": "Install SaltyOS", "installApp": "Install ABLauncher", "installTheme": "Install", "imp": "Import zip", "exp": "Save zip", "name": "Name", "circle": "Circle", "hover": "Hover background", "palette": "Palette", "wall": "Wallpaper", "icons": "Icons", "choose": "Choose", "none": "None", "noUsb": "WebUSB unavailable", "disc": "Disconnected", "connFail": "Connection failed: ", "fail": "Failed: ", "erase": "Erasing", "write": "Writing", "done": "Done", "dfuErr": "DFU error", "badDfu": "Invalid .dfu file", "tooBig": "Themes too large", "kib": "KiB", "missing": "Missing file: ", "notFound": " not found", "dlFail": "Download failed", "readFail": "Read failed", "noExt": "Incompatible firmware", "badHdr": "Corrupted firmware", "dl": "Downloading…", "read": "Reading…", "link": "Linking…", "noSpace": "Not enough space", "badZip": "Invalid zip", "badPal": "Invalid palette", "needName": "Name required", "badImg": "Unreadable image"}};
 let lang='fr';try{lang=localStorage.getItem('lang')||(navigator.language||'').slice(0,2)}catch(_){}
 if(lang!=='fr')lang='en';
 Object.assign(LANGS.fr,{connect:"Connecter la calculatrice",tApp:"ABLauncher",latest:"Dernière version",themeHint:"Crée un thème et installe-le sur ta calculatrice.",projects:"Projets",someone:"Ta NumWorks",on:"Connectée",model:"Modèle",serial:"N° série"});
 Object.assign(LANGS.en,{connect:"Connect calculator",tApp:"ABLauncher",latest:"Latest release",themeHint:"Create a theme and install it on your calculator.",projects:"Projects",someone:"Your NumWorks",on:"Connected",model:"Model",serial:"Serial"});
-Object.assign(LANGS.fr,{myThemes:"Mes thèmes",presets:"Thèmes de base",newTheme:"Nouveau thème",dup:"Dupliquer",installThemes:"Installer les thèmes",max4:"4 thèmes maximum",presetFail:"Thème introuvable : ",del:"Supprimer",themeNote:"L'installation envoie tous les thèmes de la liste et remplace ceux déjà présents sur la calculatrice."});
-Object.assign(LANGS.en,{myThemes:"My themes",presets:"Base themes",newTheme:"New theme",dup:"Duplicate",installThemes:"Install themes",max4:"4 themes maximum",presetFail:"Theme not found: ",del:"Delete",themeNote:"Installing sends every theme in the list and replaces the ones already on the calculator."});
+Object.assign(LANGS.fr,{myThemes:"Mes thèmes",presets:"Thèmes de base",newTheme:"Nouveau thème",dup:"Dupliquer",installThemes:"Installer les thèmes",presetFail:"Thème introuvable : ",del:"Supprimer",themeNote:"L'installation envoie tous les thèmes de la liste et remplace ceux déjà présents sur la calculatrice."});
+Object.assign(LANGS.fr,{space:"Espace utilisé",overMsg:"Limite dépassée de {x} : retire des images ou des thèmes pour pouvoir installer.",overTip:"Taille supérieure à la limite, installation impossible"});
+Object.assign(LANGS.en,{space:"Space used",overMsg:"Over the limit by {x}: remove images or themes to install.",overTip:"Size exceeds the limit, install disabled"});
+Object.assign(LANGS.en,{myThemes:"My themes",presets:"Base themes",newTheme:"New theme",dup:"Duplicate",installThemes:"Install themes",presetFail:"Theme not found: ",del:"Delete",themeNote:"Installing sends every theme in the list and replaces the ones already on the calculator."});
 const tr=k=>LANGS[lang][k]||k;
 let devName='',_tt;
 function toast(m){const e=$('#toast');e.textContent=m;e.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>e.classList.remove('show'),3200)}
@@ -271,7 +309,7 @@ function applyLang(){
   document.documentElement.lang=lang;
   document.querySelectorAll('[data-i]').forEach(e=>e.textContent=tr(e.dataset.i));
   document.querySelectorAll('.seg button').forEach(b=>b.classList.toggle('on',b.dataset.l===lang));
-  refresh();renderImgs();renderList();
+  refresh();renderImgs();
 }
 document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{lang=b.dataset.l;try{localStorage.setItem('lang',lang)}catch(_){}applyLang()});
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
@@ -281,6 +319,7 @@ const hex=a=>'0x'+a.toString(16).padStart(8,'0');
 document.querySelectorAll('nav button[data-p]').forEach(b=>b.onclick=()=>{
   document.querySelectorAll('nav button[data-p]').forEach(x=>x.setAttribute('aria-selected',x===b));
   document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on',p.id==='p-'+b.dataset.p));
+  refresh();
   scrollTo(0,0);
 });
 
@@ -367,7 +406,7 @@ function packArea(themes){
     t.icons.forEach((ic,i)=>{if(ic){e.setUint32(40+i*4,cur,true);e.setUint32(88+i*4,ic.length,true);blobs.push(ic);cur+=ic.length}});
     ents.push(new Uint8Array(e.buffer));
   }
-  if(cur>THEME_MAX)throw new Error(tr('tooBig'));
+  if(cur>THEME_MAX)throw new Error(tr('tooBig')+' ('+(cur/1024).toFixed(1)+' / '+(THEME_MAX/1024)+' '+tr('kib')+')');
   const raw=cat([u32(0x87654321,3,themes.length),...ents,...blobs]);
   const pad=new Uint8Array(Math.ceil(raw.length/PAGE)*PAGE);pad.set(raw);return pad;
 }
@@ -435,11 +474,18 @@ async function readInfo(){
 function modelOf(d){return 'n'+((d.deviceVersionMajor<<8)|(d.deviceVersionMinor<<4)|d.deviceVersionSubminor).toString(16).padStart(4,'0')}
 function refresh(){
   const ok=!!dev,all=s=>document.querySelectorAll(s);
-  const calcImg=ok?'src/calculator_on.png':'src/calculator_off.png';
+  const activePage=document.querySelector('.page.on')?.id;
+  let calcImg='src/calculator_off.png';
+  if(ok){
+    if(activePage==='p-os')calcImg='src/calculator_SaltyOS.png';
+    else if(activePage==='p-app')calcImg='src/calculator_launcher.png';
+    else if(activePage==='p-theme')calcImg='src/calculator_themes.png';
+    else calcImg='src/calculator_on.png';
+  }
   all('.calc').forEach(e=>e.innerHTML='<img src="'+calcImg+'" alt="NumWorks" width="330" height="641">');
   $('#go-os').hidden=!ok;$('#go-app').hidden=!ok;$('#go-theme').hidden=!ok;
   $('#go-os').disabled=busy||!SUP.includes(devModel);
-  $('#go-app').disabled=busy;$('#go-theme').disabled=busy||!THEMES.length;$('#go-theme').textContent=tr('installThemes')+' ('+THEMES.length+')';
+  $('#go-app').disabled=busy;$('#go-theme').disabled=busy||!THEMES.length||sizeOver;$('#go-theme').textContent=tr('installThemes')+' ('+THEMES.length+')';
   all('.connectBtn').forEach(b=>b.hidden=ok);
   all('.devTitle').forEach(e=>e.textContent=ok?devName:tr('someone'));
   all('.bState').forEach(e=>e.textContent=busy?tr('busy'):ok?tr('on'):tr('off'));
@@ -524,9 +570,26 @@ TextColor 0xffffff
 TextColorHover 0x000000
 WallpaperColor 0xffffff`;
 const parsePal=t=>t.split(/\r?\n/).map(l=>l.trim()).filter(l=>l&&l[0]!=='#').map(l=>{const m=l.match(/^(\S+)\s+0x([0-9a-fA-F]+)$/);if(!m)throw new Error(tr('badPal'));return{n:m[1],v:'#'+m[2].toLowerCase().padStart(6,'0')}});
-const MAXT=4;
 const mkTheme=n=>({name:n,circle:0,hover:false,pal:parsePal(PAL0),wall:null,icons:Array(12).fill(null),src:null});
-const THEMES=[mkTheme('Theme 1')];let cur=0,T=THEMES[0];
+const THEMES=[{...mkTheme('Epsilon'),_ph:true}];let cur=0,T=THEMES[0],sizeOver=false;
+/* Taille réelle (compressée) des thèmes, mise en cache par image */
+const _wm=new WeakMap(),_im=new WeakMap();
+const wallBin=im=>{if(!im)return null;let v=_wm.get(im);if(!v){v=makeWall(im);_wm.set(im,v)}return v};
+const iconBin=im=>{if(!im)return null;let v=_im.get(im);if(!v){v=lz4(im.rgb);_im.set(im,v)}return v};
+const themeBytes=t=>136+4*t.pal.length+(t.wall?wallBin(t.wall).length:0)+t.icons.reduce((a,im)=>a+(im?iconBin(im).length:0),0);
+const kib=b=>(b/1024).toFixed(1)+' '+tr('kib');
+function syncGo(){const b=$('#go-theme');b.disabled=busy||!THEMES.length||sizeOver;b.title=sizeOver?tr('overTip'):''}
+function updateSize(){
+  const per=THEMES.map(themeBytes),tot=12+per.reduce((a,b)=>a+b,0);
+  sizeOver=tot>THEME_MAX;
+  const txt=(tot/1024).toFixed(1)+' / '+(THEME_MAX/1024)+' '+tr('kib');
+  $('#tSize').textContent=txt;$('#tSize').classList.toggle('over',sizeOver);
+  $('#tMeterTxt').textContent=txt;$('#tMeterFill').style.width=Math.min(100,tot/THEME_MAX*100)+'%';
+  const m=$('#tMeter');m.classList.toggle('over',sizeOver);m.setAttribute('aria-valuenow',(tot/1024).toFixed(1));m.setAttribute('aria-valuetext',txt);
+  const w=$('#tOver');w.hidden=!sizeOver;w.textContent=sizeOver?tr('overMsg').replace('{x}',kib(tot-THEME_MAX)):'';
+  per.forEach((b,i)=>{const e=document.querySelector('[data-sz="'+i+'"]');if(e)e.textContent=kib(b)});
+  syncGo();
+}
 $('#tCircle').innerHTML=[0,1,2,3,4,5,6,7].map(i=>'<option>'+i+'</option>').join('');
 async function toImg(blob,w,h){
   const bmp=await createImageBitmap(blob),c=document.createElement('canvas');c.width=w;c.height=h;
@@ -537,7 +600,7 @@ async function toImg(blob,w,h){
   return{png,rgb,w,h,url:URL.createObjectURL(new Blob([png],{type:'image/png'}))};
 }
 function render(){
-  renderList();$('#tName').value=T.name;$('#tCircle').value=T.circle;$('#tHover').checked=T.hover;
+  $('#tName').value=T.name;$('#tCircle').value=T.circle;$('#tHover').checked=T.hover;
   $('#pal').innerHTML=T.pal.map((p,i)=>'<label class="sw"><input type="color" data-i="'+i+'" value="'+p.v+'"><span>'+p.n+'<br><small>'+p.v+'</small></span></label>').join('');
   renderImgs();
 }
@@ -546,6 +609,7 @@ function renderImgs(){
   $('#wallTh').innerHTML=T.wall?'<img src="'+T.wall.url+'" alt="">':'<span>'+tr('none')+'</span>';
   $('#icCount').textContent='('+T.icons.filter(Boolean).length+' / '+ICN.length+')';
   $('#icons').innerHTML=ICN.map((n,i)=>'<div class="ic">'+th(T.icons[i],i)+n+'<br><button data-t="'+i+'">'+tr('choose')+'</button> <button data-c="'+i+'">×</button></div>').join('');
+  renderList();
 }
 let tgt=null;
 document.addEventListener('click',e=>{
@@ -558,7 +622,7 @@ $('#in-img').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!
 $('#tName').oninput=e=>{T.name=e.target.value;renderList()};
 $('#tCircle').onchange=e=>T.circle=+e.target.value;
 $('#tHover').onchange=e=>T.hover=e.target.checked;
-$('#pal').oninput=e=>{const i=+e.target.dataset.i;T.pal[i].v=e.target.value;e.target.nextElementSibling.querySelector('small').textContent=e.target.value};
+$('#pal').oninput=e=>{const i=+e.target.dataset.i;T.pal[i].v=e.target.value;renderList();e.target.nextElementSibling.querySelector('small').textContent=e.target.value};
 
 /* zip (stockage simple) */
 const CRC=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
@@ -607,41 +671,54 @@ async function themeFromZip(buf){
   return nt;
 }
 
-/* ----- Liste de thèmes (4 maximum, comme THEME_COUNT_MAX) ----- */
+/* ----- Liste de thèmes (seule limite : 2 Mio au total) ----- */
 const escH=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function renderList(){
-  $('#tCount').textContent='('+THEMES.length+' / '+MAXT+')';
-  $('#tlist').innerHTML=THEMES.map((t,i)=>'<div class="tchip'+(i===cur?' on':'')+'"><button class="tsel" data-ts="'+i+'" aria-pressed="'+(i===cur)+'">'+escH(t.name.trim()||'—')+'</button><button class="tdel" data-td="'+i+'" aria-label="'+escH(tr('del'))+'">×</button></div>').join('');
-  $('#tNew').disabled=$('#tDup').disabled=THEMES.length>=MAXT;
-  document.querySelectorAll('[data-pr]').forEach(b=>b.classList.toggle('done',THEMES.some(t=>t.src===b.dataset.pr)));
+  $('#tCount').textContent='('+THEMES.length+')';
+  const pc=(t,n,d)=>(t.pal.find(p=>p.n===n)||{}).v||d;
+  $('#tlist').innerHTML=THEMES.map((t,i)=>'<div class="tcard'+(i===cur?' on':'')+'"><button class="tsel" data-ts="'+i+'" aria-pressed="'+(i===cur)+'"><span class="tth"><i class="tb" style="background:'+pc(t,'YellowDark','#ffb734')+'"></i><i class="tw" style="'+(t.wall?'background-image:url('+t.wall.url+')':'background:'+pc(t,'WallpaperColor','#fff'))+'"></i></span><span class="tinfo"><b>'+escH(t.name.trim()||'—')+'</b><small data-sz="'+i+'"></small></span></button><button class="tdel" data-td="'+i+'" aria-label="'+escH(tr('del'))+'" title="'+escH(tr('del'))+'">×</button></div>').join('');
+  updateSize();
 }
 function select(i){cur=i;T=THEMES[i];render()}
 function addTheme(t){
-  if(THEMES.length>=MAXT){toast(tr('max4'));return false}
   THEMES.push(t);select(THEMES.length-1);refresh();return true;
 }
 $('#tlist').onclick=e=>{
   const s=e.target.closest('[data-ts]'),d=e.target.closest('[data-td]');
   if(s)select(+s.dataset.ts);
   if(d){const i=+d.dataset.td;
-    if(THEMES.length===1){THEMES[0]=mkTheme('Theme 1');select(0)}
+    if(THEMES.length===1){THEMES[0]={...mkTheme('Epsilon'),_ph:true};select(0);loadDefault()}
     else{THEMES.splice(i,1);select(i<cur?cur-1:Math.min(cur,THEMES.length-1))}
     refresh()}
 };
-$('#tNew').onclick=()=>addTheme(mkTheme('Theme '+(THEMES.length+1)));
+/* Thème de base = themes/epsilon.zip (nommé « Epsilon ») */
+async function epsilonTheme(){const t=await themeFromZip(await getZip('epsilon'));t.name='Epsilon';t.src=null;return t}
+async function loadDefault(){
+  try{const t=await epsilonTheme();
+    if(THEMES.length===1&&THEMES[0]._ph){THEMES[0]=t;select(0);refresh()}}catch(_){}
+}
+$('#tNew').onclick=async()=>{
+  const b=$('#tNew');b.disabled=true;
+  try{addTheme(await epsilonTheme())}
+  catch(_){toast(tr('presetFail')+'themes/epsilon.zip');addTheme(mkTheme('Epsilon'))}
+  b.disabled=false;
+};
 $('#tDup').onclick=()=>addTheme({...T,name:(T.name.slice(0,12)+' 2').trim(),pal:T.pal.map(p=>({...p})),icons:[...T.icons],src:null});
 
 /* ----- Thèmes de base : themes/{id}.zip (ajoute une entrée pour en proposer d'autres) ----- */
 const PRESETS=[{id:'omega',name:'Omega'},{id:'kawaii',name:'Kawaii'}];
 $('#presets').innerHTML=PRESETS.map(p=>'<button class="ghost pre" data-pr="'+p.id+'">'+escH(p.name)+'</button>').join('');
+const _zc={};
+async function getZip(id){
+  if(_zc[id])return _zc[id];
+  const r=await fetch('themes/'+id+'.zip',{cache:'no-cache'});if(!r.ok)throw 0;
+  const buf=await r.arrayBuffer();if(new Uint8Array(buf.slice(0,2)).join()!=='80,75')throw 0;
+  return _zc[id]=buf;
+}
 async function loadPreset(p,btn){
-  const ex=THEMES.findIndex(t=>t.src===p.id);
-  if(ex>=0){select(ex);return}
   btn.disabled=true;let buf;
-  try{
-    const r=await fetch('themes/'+p.id+'.zip',{cache:'no-cache'});if(!r.ok)throw 0;
-    buf=await r.arrayBuffer();if(new Uint8Array(buf.slice(0,2)).join()!=='80,75')throw 0;
-  }catch(_){toast(tr('presetFail')+'themes/'+p.id+'.zip');btn.disabled=false;return}
+  try{buf=await getZip(p.id)}
+  catch(_){toast(tr('presetFail')+'themes/'+p.id+'.zip');btn.disabled=false;return}
   try{const t=await themeFromZip(buf);t.src=p.id;addTheme(t)}catch(x){toast(x.message)}
   btn.disabled=false;
 }
@@ -658,12 +735,14 @@ $('#go-theme').onclick=()=>{
   try{
     if(!THEMES.length||THEMES.some(t=>!t.name.trim()))throw new Error(tr('needName'));
     const bin=packArea(THEMES.map(t=>({name:t.name.trim(),cols:t.pal.map(p=>parseInt(p.v.slice(1),16)),vars:{defaultCircleLevel:t.circle,isAppNameBackgroundHover:t.hover?1:0},
-      wall:t.wall?makeWall(t.wall):null,icons:t.icons.map(im=>im?lz4(im.rgb):null)})));
+      wall:wallBin(t.wall),icons:t.icons.map(iconBin)})));
     flash([{address:THEME_ADDR,data:bin}],'theme','');
   }catch(e){$('#t-theme').textContent=e.message;log(e.message,'error')}
 };
 /* ===== Interface : calculatrice, menu GitHub, thème, projets ===== */
-const CALC_ON='<img src="src/calculator_on.png" alt="NumWorks" width="330" height="641">';
+const CALC_SALTYOS='<img src="src/calculator_SaltyOS.png" alt="NumWorks" width="330" height="641">';
+const CALC_LAUNCHER='<img src="src/calculator_launcher.png" alt="NumWorks" width="330" height="641">';
+const CALC_THEMES='<img src="src/calculator_themes.png" alt="NumWorks" width="330" height="641">';
 const CALC_OFF='<img src="src/calculator_off.png" alt="NumWorks" width="330" height="641">';
 document.querySelectorAll('.calc').forEach(e=>e.innerHTML=CALC_OFF);
 
@@ -681,11 +760,11 @@ $('#themeBtn').onclick=()=>setTheme(document.documentElement.dataset.theme==='da
 
 const STAR='<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg>';
 const FORK='<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="5" r="2"/><circle cx="18" cy="5" r="2"/><circle cx="12" cy="19" r="2"/><path d="M6 7v2a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V7M12 12v5"/></svg>';
-const PROJ=[['SaltyOS',REPOS.os],['ABLauncher',REPOS.ab],['Salty-OS Installer',REPOS.inst]];
+const PROJ=[['Salty-OS',REPOS.os],['ABLauncher-Numworks',REPOS.ab],['Salty-OS-Installer',REPOS.inst]];
 $('#projects').innerHTML=PROJ.map(([n,r],i)=>'<a class="proj" href="https://github.com/'+r+'" target="_blank" rel="noopener"><b>'+n+'</b><span class="st">'+STAR+'<i id="st'+i+'">—</i>'+FORK+'<i id="fk'+i+'">—</i></span></a>').join('');
 PROJ.forEach(([n,r],i)=>fetch('https://api.github.com/repos/'+r).then(x=>x.ok?x.json():Promise.reject()).then(j=>{$('#st'+i).textContent=j.stargazers_count;$('#fk'+i).textContent=j.forks_count}).catch(()=>{}));
 
-render();applyLang();
+render();applyLang();loadDefault();
 </script>
 </body>
 </html>
