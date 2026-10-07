@@ -1,1 +1,1 @@
-# Salty-OS-Theme-Maker
+# Salty-OS-Installer

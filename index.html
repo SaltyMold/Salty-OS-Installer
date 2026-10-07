@@ -4,167 +4,306 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Salty Installer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('theme')||'dark'}catch(e){document.documentElement.dataset.theme='dark'}</script>
+
 <style>
-:root{--bg:#f5f7fa;--card:#fff;--ink:#1c2430;--mute:#6b7788;--line:#e3e8ef;--acc:#2f6bff;--acc-s:#e8efff;--ok:#1f9d63;--err:#d64545}
+:root{
+  --bg:#161818;--panel:#232424;--panel2:#2c2d2d;--ink:#dadbdb;--mute:#9b9d9d;--line:#383a3a;
+  --acc:#2f7dc0;--acc-d:#256aa5;--acc-s:rgba(47,125,192,.2);--acc-t:#7ab8ee;--ok:#2fb67c;
+  --logo:#ffb734;--r:20px;color-scheme:dark;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+:root[data-theme=light]{
+  --bg:#f2f3f3;--panel:#fff;--panel2:#ebecec;--ink:#1f2222;--mute:#666a6a;--line:#dcdede;
+  --acc-s:rgba(47,125,192,.13);--acc-t:#256aa5;color-scheme:light;
+}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-.wrap{max-width:760px;margin:0 auto;padding:24px 16px 56px}
-header.top{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-.brand{font-size:18px;font-weight:650;letter-spacing:-.01em}
-.dev{color:var(--mute);font-size:13px;margin-top:2px}
-.dev b{color:var(--ink);font-weight:600}
-button{font:inherit;cursor:pointer;border:0;border-radius:9px;padding:9px 16px;font-weight:600;background:var(--acc);color:#fff}
-button:hover:not(:disabled){filter:brightness(1.08)}
-button:disabled{background:#c9d1dd;cursor:not-allowed}
-button.ghost{background:var(--acc-s);color:var(--acc)}
-:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
-nav{display:flex;gap:4px;margin:20px 0 14px;background:#e9eef5;padding:4px;border-radius:11px}
-nav button{flex:1;background:transparent;color:var(--mute);padding:8px 10px}
-nav button[aria-selected=true]{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(20,30,50,.08)}
-section.page{display:none;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
-section.page.on{display:block}
-h2{margin:0 0 4px;font-size:18px;letter-spacing:-.01em}
-p.lead{margin:0 0 18px;color:var(--mute)}
-.drop{border:1.5px dashed #c5cfdd;border-radius:12px;padding:26px 16px;text-align:center;color:var(--mute);cursor:pointer;transition:.15s}
-.drop:hover,.drop.over{border-color:var(--acc);background:var(--acc-s);color:var(--acc)}
-.drop strong{display:block;color:var(--ink);margin-bottom:2px}
-.file{display:none;margin-top:12px;padding:10px 12px;background:var(--bg);border-radius:9px;font-size:13px}
-.file.on{display:block}
-.row{display:flex;gap:10px;align-items:center;margin-top:16px;flex-wrap:wrap}
-label.f{font-size:13px;color:var(--mute);display:flex;flex-direction:column;gap:4px}
-select,input[type=text]{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
-.bar{height:8px;background:#e9eef5;border-radius:99px;overflow:hidden;margin-top:16px;display:none}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Rubik,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+button{font:inherit;cursor:pointer;border:0;border-radius:9px;padding:8px 14px;font-weight:600;background:var(--acc);color:#fff;transition:filter .12s,background .12s}
+button:hover:not(:disabled){filter:brightness(1.1)}
+button:disabled{background:var(--line);color:var(--mute);cursor:not-allowed}
+button.ghost{background:var(--acc-s);color:var(--acc-t)}
+button.ghost:disabled{background:var(--line);color:var(--mute)}
+:focus-visible{outline:2px solid var(--acc-t);outline-offset:2px}
+a{color:var(--acc-t)}
+.sp{flex:1}
+.wrap{max-width:1500px;margin:0 auto;padding:0 clamp(16px,3.5vw,44px)}
+
+/* ===== En-tête ===== */
+.top{padding:18px 0 22px}
+.top .wrap{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.logo{font-size:27px;font-weight:700;letter-spacing:-.02em;color:var(--logo);margin-right:14px;line-height:1}
+nav{display:flex;gap:2px;flex-wrap:wrap}
+.tab{display:inline-flex;align-items:center;gap:6px;background:transparent;color:var(--mute);padding:7px 11px;font-weight:500;font-size:15px;border-radius:9px}
+.tab:hover:not(:disabled){background:var(--panel);color:var(--ink);filter:none}
+.tab[aria-selected=true]{background:var(--panel2);color:var(--ink);font-weight:600}
+.tab svg{flex:none}
+.gh{position:relative}
+.menu{position:absolute;top:calc(100% + 6px);left:0;z-index:20;min-width:240px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:6px;box-shadow:0 12px 32px rgba(0,0,0,.35)}
+.menu a{display:block;padding:9px 12px;border-radius:9px;color:var(--ink);text-decoration:none;font-weight:500}
+.menu a:hover{background:var(--panel2)}
+.menu small{display:block;color:var(--mute);font-weight:400;font-size:12px}
+.icon{background:transparent;color:var(--ink);padding:7px 9px;display:grid;place-items:center;border-radius:9px}
+.icon:hover:not(:disabled){background:var(--panel);filter:none}
+.seg{display:flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;margin-left:6px}
+.seg button{background:transparent;color:var(--mute);border-radius:0;padding:5px 10px;font-weight:600;font-size:13px}
+.seg button.on{background:var(--panel2);color:var(--ink)}
+
+/* ===== Cartes ===== */
+.card{background:var(--panel);border-radius:var(--r);padding:20px;min-width:0}
+.card>h2{margin:0 0 12px;font-size:16px;font-weight:600}
+.page{display:none}
+.page.on{display:block}
+
+/* ===== Carte calculatrice ===== */
+.hero{display:grid;grid-template-columns:170px minmax(0,1fr) auto;column-gap:18px;align-items:center;padding:20px 28px 20px 0;min-height:150px}
+.calc{width:104px;justify-self:center}
+.calc img{display:block;width:100%;height:auto;filter:drop-shadow(0 6px 12px rgba(0,0,0,.28))}
+.hbody{min-width:0}
+.hbody h1{margin:0 0 10px;font-size:23px;font-weight:600;letter-spacing:-.01em;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.badges{display:flex;gap:10px;flex-wrap:wrap}
+.badge{display:inline-flex;align-items:center;padding:3px 14px;border-radius:8px;font-weight:700;font-size:16px;line-height:1.7;white-space:nowrap}
+.b-gray{background:#c8c9c9;color:#2b2d2d}
+.b-red{background:#c63535;color:#ffe9e9}
+.b-yel{background:#d9b71d;color:#3a3100}
+.sub{margin:12px 0 0;color:var(--mute);font-size:13.5px}
+.sub b{color:var(--ink);font-weight:600}
+.act{align-self:end}
+.cta{padding:9px 16px;border-radius:9px;font-weight:700;font-size:14px;letter-spacing:.01em;text-transform:uppercase;white-space:nowrap}
+.hero .bar,.hero .pt{grid-column:1/-1;margin-left:28px}
+.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:18px;display:none}
 .bar.on{display:block}
 .bar i{display:block;height:100%;width:0;background:var(--acc);transition:width .15s}
 .bar.done i{background:var(--ok)}
-.pt{font-size:13px;color:var(--mute);margin-top:6px;min-height:20px}
-ul.themes{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:8px}
-ul.themes li{display:flex;justify-content:space-between;gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:9px;font-size:14px}
-ul.themes small{color:var(--mute)}
-.warn{color:#a8620a}
-details{margin-top:18px;font-size:13px;color:var(--mute)}
-summary{cursor:pointer}
-#log{margin-top:20px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 14px;font:12.5px/1.6 ui-monospace,Menlo,Consolas,monospace;max-height:150px;overflow:auto;color:var(--mute)}
-#log .error{color:var(--err)}#log .success{color:var(--ok)}
-#log:empty::before{content:"Journal d'activité";opacity:.6}
-.note{margin-top:14px;padding:10px 12px;background:#fff8ea;border:1px solid #f3dfb0;border-radius:9px;font-size:13px;color:#7a5410}
+.pt{font-size:13px;color:var(--mute);margin-top:8px}
+.pt:empty{display:none}
 
-.sw-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
-.sw{display:flex;gap:8px;align-items:center;border:1px solid var(--line);border-radius:9px;padding:6px 8px;font-size:12.5px;line-height:1.25;cursor:pointer}
+/* ===== Projets ===== */
+.ptitle{margin:56px 0 18px;font-size:25px;font-weight:600;letter-spacing:-.01em;color:var(--ink)}
+.projects{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.proj{display:block;background:var(--panel);border-radius:16px;padding:20px 24px;color:var(--ink);text-decoration:none;transition:background .12s}
+.proj:hover{background:var(--panel2)}
+.proj b{display:block;font-size:16px;font-weight:600;margin-bottom:6px}
+.st{display:flex;align-items:center;gap:6px;color:var(--mute);font-size:15px}
+.st svg{flex:none}
+.st i{font-style:normal;margin-right:10px}
+hr.end{border:0;border-top:1px solid var(--line);margin:40px 0 0}
+.endsp{height:40px}
+
+/* ===== Éditeur de thème ===== */
+label.f{font-size:12.5px;color:var(--mute);display:flex;flex-direction:column;gap:5px;font-weight:600}
+select,input[type=text]{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:var(--panel2);color:var(--ink);font-weight:400}
+.chk{display:flex;gap:8px;align-items:center;margin-top:14px;font-size:14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:20px 0}
+.cols{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(300px,1fr);gap:12px;align-items:start}
+.stack{display:flex;flex-direction:column;gap:12px;min-width:0}
+.sw-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px}
+.sw{display:flex;gap:9px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:6px 9px;font-size:12px;line-height:1.25;cursor:pointer;background:var(--panel2)}
+.sw:hover{border-color:var(--acc)}
 .sw input{width:30px;height:30px;border:0;padding:0;background:none;cursor:pointer;flex:none}
-.sw small{color:var(--mute)}
-.ic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
-.ic{border:1px solid var(--line);border-radius:9px;padding:8px;text-align:center;font-size:12px;color:var(--mute)}
-.ic .th{height:60px;display:flex;align-items:center;justify-content:center;background:var(--bg);border-radius:6px;margin-bottom:6px;cursor:pointer;overflow:hidden}
-.ic img{max-width:100%;max-height:100%;image-rendering:pixelated}
-.ic button,.mini{padding:3px 8px;font-size:12px;background:var(--acc-s);color:var(--acc)}
-h3{font-size:14px;margin:22px 0 8px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.kv{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}.kv span{color:var(--mute)}
-a{color:var(--acc)}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.sw small{color:var(--mute);font-family:var(--mono)}
+.ic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:10px}
+.ic{border:1px solid var(--line);border-radius:12px;padding:8px;text-align:center;font-size:12px;color:var(--mute);background:var(--panel2)}
+.ic .th,.wall .th{display:flex;align-items:center;justify-content:center;background:repeating-conic-gradient(var(--line) 0 25%,transparent 0 50%) 0 0/14px 14px;border-radius:8px;margin-bottom:7px;cursor:pointer;overflow:hidden;color:var(--mute);font-size:12px}
+.ic .th{height:62px}
+.wall .th{aspect-ratio:4/3;width:100%;margin-bottom:10px}
+.ic img,.wall img{max-width:100%;max-height:100%;image-rendering:pixelated}
+.ic button,.wall button{padding:3px 9px;font-size:12px;background:var(--acc-s);color:var(--acc-t)}
+.wall{max-width:320px}
+
+#toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:99px;opacity:0;pointer-events:none;transition:.2s;font-size:13px;max-width:90vw;z-index:30}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+
+#tmgr{margin-top:12px}
+#tmgr h2 small{color:var(--mute);font-weight:400;font-size:13px}
+#tmgr h2.sec{margin-top:20px}
+.tlist{display:flex;gap:8px;flex-wrap:wrap}
+.tchip{display:inline-flex;align-items:center;background:var(--panel2);border:1px solid transparent;border-radius:10px;overflow:hidden}
+.tchip.on{border-color:var(--acc);background:var(--acc-s)}
+.tsel{background:transparent;color:var(--ink);border-radius:0;padding:7px 8px 7px 14px;font-weight:500}
+.tdel{background:transparent;color:var(--mute);border-radius:0;padding:7px 11px 7px 4px;font-size:16px;line-height:1}
+.tdel:hover:not(:disabled){color:var(--ink);filter:none}
+.tact{display:flex;gap:8px;margin-top:12px}
+.pre::before{content:'+ '}
+.pre.done::before{content:'✓ '}
+.hint{margin:16px 0 0;color:var(--mute);font-size:13px}
+
+@media (max-width:1100px){.cols{grid-template-columns:1fr}}
+@media (max-width:760px){
+  .hero{grid-template-columns:96px minmax(0,1fr);padding:18px 18px 18px 0;row-gap:16px}
+  .calc{width:72px}
+  .act{grid-column:1/-1;justify-self:end;padding-left:18px}
+  .hero .bar,.hero .pt{margin-left:18px}
+  .hbody h1{font-size:20px}
+  .projects{grid-template-columns:1fr}
+  .grid2{grid-template-columns:1fr}
+  .seg{margin-left:auto}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header class="top">
-    <div>
-      <div class="brand">Salty Installer</div>
-      <div class="dev" id="devInfo">Aucune calculatrice connectée. Passez-la en mode DFU (touches 6 + reset), branchez-la, puis connectez.</div>
-    </div>
-    <button id="connectBtn">Connecter la calculatrice</button>
-  </header>
-
-  <nav role="tablist" aria-label="Fonctions">
-    <button role="tab" aria-selected="true" data-p="os">SaltyOS</button>
-    <button role="tab" aria-selected="false" data-p="app">Applications</button>
-    <button role="tab" aria-selected="false" data-p="theme">Thèmes</button>
+<header class="top"><div class="wrap">
+  <div class="logo">SaltyOS</div>
+  <nav role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-p="os">SaltyOS</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="app">ABLauncher</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="theme" data-i="tTheme"></button>
   </nav>
+  <div class="gh">
+    <button class="tab" id="ghBtn" aria-haspopup="true" aria-expanded="false">GitHub <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></button>
+    <div class="menu" id="ghMenu" hidden>
+      <a href="https://github.com/SaltyMold/Salty-OS" target="_blank" rel="noopener">Salty-OS<small>SaltyMold/Salty-OS</small></a>
+      <a href="https://github.com/SaltyMold/ABLauncher-Numworks/" target="_blank" rel="noopener">ABLauncher<small>SaltyMold/ABLauncher-Numworks</small></a>
+      <a href="https://github.com/SaltyMold/Salty-OS-Installer" target="_blank" rel="noopener">Salty-OS Installer<small>SaltyMold/Salty-OS-Installer</small></a>
+    </div>
+  </div>
+  <span class="sp"></span>
+  <button class="icon" id="themeBtn" aria-label="Thème / Theme"></button>
+  <div class="seg"><button data-l="fr">FR</button><button data-l="en">EN</button></div>
+</div></header>
 
+<main class="wrap">
   <section class="page on" id="p-os">
-    <h2>Installer SaltyOS</h2>
-    <p class="lead">Télécharge la dernière version depuis GitHub et l'envoie dans le slot B.</p>
-    <div class="kv"><span>Dernière version</span><b id="osTag">…</b></div>
-    <div class="kv"><span>Modèle détecté</span><b id="osModel">non connectée</b></div>
-    <div class="kv"><span>Fichier utilisé</span><b id="osFile">—</b></div>
-    <div class="row"><button id="go-os" disabled>Installer SaltyOS</button>
-      <label class="mini" style="border-radius:9px;padding:9px 12px;cursor:pointer;font-weight:600">Utiliser un fichier local<input type="file" id="in-os" accept=".dfu" hidden></label></div>
-    <div class="bar" id="b-os"><i></i></div><div class="pt" id="t-os"></div>
+      <div class="hero card">
+        <div class="calc"></div>
+        <div class="hbody">
+          <h1 class="devTitle"></h1>
+          <div class="badges"><span class="badge b-gray bState"></span><span class="badge b-red bModel"></span><span class="badge b-yel bSerial"></span></div>
+          <p class="sub"><span data-i="latest"></span> <b id="osTag">…</b></p>
+        </div>
+        <div class="act"><button class="cta connectBtn" data-i="connect"></button><button class="cta" id="go-os" hidden data-i="installOS"></button></div>
+        <div class="bar" id="b-os"><i></i></div><div class="pt" id="t-os"></div>
+      </div>
   </section>
 
   <section class="page" id="p-app">
-    <h2>Installer ABLauncher</h2>
-    <p class="lead">Même procédure que my.numworks.com/apps : l'app est liée pour votre calculatrice puis envoyée.</p>
-    <div class="kv"><span>Dernière version</span><b id="abTag">…</b></div>
-    <div class="kv"><span>Fichier</span><b id="abFile">ABLauncher.nwa</b></div>
-    <div class="row"><button id="go-app" disabled>Installer ABLauncher</button>
-      <label class="mini" style="border-radius:9px;padding:9px 12px;cursor:pointer;font-weight:600">Utiliser un .nwa local<input type="file" id="in-nwa" accept=".nwa" hidden></label></div>
-    <div class="bar" id="b-app"><i></i></div><div class="pt" id="t-app"></div>
-    <div class="note">Comme sur le site officiel, cette opération remplace toutes les applications externes déjà installées sur la calculatrice.</div>
+      <div class="hero card">
+        <div class="calc"></div>
+        <div class="hbody">
+          <h1 class="devTitle"></h1>
+          <div class="badges"><span class="badge b-gray bState"></span><span class="badge b-red bModel"></span><span class="badge b-yel bSerial"></span></div>
+          <p class="sub"><span data-i="latest"></span> <b id="abTag">…</b></p>
+        </div>
+        <div class="act"><button class="cta connectBtn" data-i="connect"></button><button class="cta" id="go-app" hidden data-i="installApp"></button></div>
+        <div class="bar" id="b-app"><i></i></div><div class="pt" id="t-app"></div>
+      </div>
   </section>
 
   <section class="page" id="p-theme">
-    <h2>Créer un thème</h2>
-    <p class="lead">Composez votre thème ici, enregistrez-le en zip ou installez-le directement.</p>
-    <div class="row" style="margin:0 0 6px">
-      <button class="ghost" id="imp">Importer un zip</button><input type="file" id="in-zip" accept=".zip" hidden>
-      <button class="ghost" id="exp">Enregistrer en zip</button>
+      <div class="hero card">
+        <div class="calc"></div>
+        <div class="hbody">
+          <h1 class="devTitle"></h1>
+          <div class="badges"><span class="badge b-gray bState"></span><span class="badge b-red bModel"></span><span class="badge b-yel bSerial"></span></div>
+          <p class="sub"><span data-i="themeHint"></span></p>
+        </div>
+        <div class="act"><button class="cta connectBtn" data-i="connect"></button><button class="cta" id="go-theme" hidden></button></div>
+        <div class="bar" id="b-theme"><i></i></div><div class="pt" id="t-theme"></div>
+      </div>
+    <div class="card" id="tmgr">
+      <h2><span data-i="myThemes"></span> <small id="tCount"></small></h2>
+      <div class="tlist" id="tlist"></div>
+      <div class="tact"><button class="ghost" id="tNew" data-i="newTheme"></button><button class="ghost" id="tDup" data-i="dup"></button></div>
+      <h2 class="sec" data-i="presets"></h2>
+      <div class="tlist" id="presets"></div>
+      <p class="hint" data-i="themeNote"></p>
     </div>
-    <h3>Général</h3>
-    <div class="grid2">
-      <label class="f">Nom (15 caractères max)<input type="text" id="tName" maxlength="15"></label>
-      <label class="f">Niveau de cercle par défaut<select id="tCircle"></select></label>
+    <div class="toolbar">
+      <button class="ghost" id="imp" data-i="imp"></button><input type="file" id="in-zip" accept=".zip" multiple hidden>
+      <button class="ghost" id="exp" data-i="exp"></button>
     </div>
-    <label class="row" style="gap:8px"><input type="checkbox" id="tHover"> Fond sur le nom de l'app survolée</label>
-    <h3>Palette</h3><div class="sw-grid" id="pal"></div>
-    <h3>Fond d'écran (320 × 240)</h3>
-    <div class="ic" style="max-width:220px"><div class="th" id="wallTh" style="height:130px"></div><button data-t="wall">Choisir</button> <button data-c="wall">Retirer</button></div>
-    <h3>Icônes (55 × 56)</h3><div class="ic-grid" id="icons"></div>
+    <div class="cols">
+      <div class="stack">
+        <div class="card">
+          <div class="grid2">
+            <label class="f"><span data-i="name"></span><input type="text" id="tName" maxlength="15"></label>
+            <label class="f"><span data-i="circle"></span><select id="tCircle"></select></label>
+          </div>
+          <label class="chk"><input type="checkbox" id="tHover"> <span data-i="hover"></span></label>
+        </div>
+        <div class="card">
+          <h2 data-i="palette"></h2>
+          <div class="sw-grid" id="pal"></div>
+        </div>
+      </div>
+      <div class="stack">
+        <div class="card">
+          <h2 data-i="wall"></h2>
+          <div class="wall"><div class="th" id="wallTh" data-t="wall"></div><button data-t="wall" data-i="choose"></button> <button data-c="wall">×</button></div>
+        </div>
+        <div class="card">
+          <h2><span data-i="icons"></span> <small id="icCount"></small></h2>
+          <div class="ic-grid" id="icons"></div>
+        </div>
+      </div>
+    </div>
     <input type="file" id="in-img" accept="image/*" hidden>
-    <div class="row"><button id="go-theme" disabled>Installer sur la calculatrice</button></div>
-    <div class="bar" id="b-theme"><i></i></div><div class="pt" id="t-theme"></div>
-    <details><summary>Détails techniques</summary>
-      <p>Zone thèmes écrite à 0x901F0000 (format version 3 de generate_theme.py). Images converties en RGB565 puis compressées en LZ4. Les pixels transparents sont convertis par le navigateur, donc leur couleur peut différer de celle du script Python.</p></details>
   </section>
 
-  <div id="log" aria-live="polite"></div>
-</div>
+  <h2 class="ptitle" data-i="projects"></h2>
+  <div class="projects" id="projects"></div>
+  <hr class="end"><div class="endsp"></div>
+</main>
+<div id="toast"></div>
 <script>
 const $=s=>document.querySelector(s);
 const IDS=[{vendorId:0x0483,productId:0xDF11},{vendorId:0x0483,productId:0xA291},{vendorId:0x0483,productId:0xA51A}];
 const PAGE=0x1000, THEME_ADDR=0x901F0000, THEME_MAX=2*1024*1024;
-let dev=null,busy=false,devModel=null,osLocal=null,abLocal=null;
+let dev=null,busy=false,devModel=null,devSerial='';
 
-function log(m,t='info'){const d=document.createElement('div');d.className=t;d.textContent=`[${new Date().toLocaleTimeString('fr-FR')}] ${m}`;$('#log').appendChild(d);$('#log').scrollTop=1e9}
+const LANGS={"fr": {"tApp": "Applications", "tTheme": "Thèmes", "connect": "Connecter", "off": "Non connectée", "busy": "En cours…", "installOS": "Installer SaltyOS", "installApp": "Installer ABLauncher", "installTheme": "Installer", "imp": "Importer zip", "exp": "Enregistrer zip", "name": "Nom", "circle": "Cercle", "hover": "Fond au survol", "palette": "Palette", "wall": "Fond d'écran", "icons": "Icônes", "choose": "Choisir", "none": "Aucun", "noUsb": "WebUSB indisponible", "disc": "Déconnectée", "connFail": "Connexion impossible : ", "fail": "Échec : ", "erase": "Effacement", "write": "Écriture", "done": "Terminé", "dfuErr": "Erreur DFU", "badDfu": "Fichier .dfu invalide", "tooBig": "Thème trop volumineux", "missing": "Fichier manquant : ", "notFound": " introuvable", "dlFail": "Téléchargement impossible", "readFail": "Lecture impossible", "noExt": "Firmware incompatible", "badHdr": "Firmware corrompu", "dl": "Téléchargement…", "read": "Lecture…", "link": "Liaison…", "noSpace": "Espace insuffisant", "badZip": "Zip invalide", "badPal": "Palette invalide", "needName": "Nom requis", "badImg": "Image illisible"}, "en": {"tApp": "Apps", "tTheme": "Themes", "connect": "Connect", "off": "Not connected", "busy": "Working…", "installOS": "Install SaltyOS", "installApp": "Install ABLauncher", "installTheme": "Install", "imp": "Import zip", "exp": "Save zip", "name": "Name", "circle": "Circle", "hover": "Hover background", "palette": "Palette", "wall": "Wallpaper", "icons": "Icons", "choose": "Choose", "none": "None", "noUsb": "WebUSB unavailable", "disc": "Disconnected", "connFail": "Connection failed: ", "fail": "Failed: ", "erase": "Erasing", "write": "Writing", "done": "Done", "dfuErr": "DFU error", "badDfu": "Invalid .dfu file", "tooBig": "Theme too large", "missing": "Missing file: ", "notFound": " not found", "dlFail": "Download failed", "readFail": "Read failed", "noExt": "Incompatible firmware", "badHdr": "Corrupted firmware", "dl": "Downloading…", "read": "Reading…", "link": "Linking…", "noSpace": "Not enough space", "badZip": "Invalid zip", "badPal": "Invalid palette", "needName": "Name required", "badImg": "Unreadable image"}};
+let lang='fr';try{lang=localStorage.getItem('lang')||(navigator.language||'').slice(0,2)}catch(_){}
+if(lang!=='fr')lang='en';
+Object.assign(LANGS.fr,{connect:"Connecter la calculatrice",tApp:"ABLauncher",latest:"Dernière version",themeHint:"Crée un thème et installe-le sur ta calculatrice.",projects:"Projets",someone:"Ta NumWorks",on:"Connectée",model:"Modèle",serial:"N° série"});
+Object.assign(LANGS.en,{connect:"Connect calculator",tApp:"ABLauncher",latest:"Latest release",themeHint:"Create a theme and install it on your calculator.",projects:"Projects",someone:"Your NumWorks",on:"Connected",model:"Model",serial:"Serial"});
+Object.assign(LANGS.fr,{myThemes:"Mes thèmes",presets:"Thèmes de base",newTheme:"Nouveau thème",dup:"Dupliquer",installThemes:"Installer les thèmes",max4:"4 thèmes maximum",presetFail:"Thème introuvable : ",del:"Supprimer",themeNote:"L'installation envoie tous les thèmes de la liste et remplace ceux déjà présents sur la calculatrice."});
+Object.assign(LANGS.en,{myThemes:"My themes",presets:"Base themes",newTheme:"New theme",dup:"Duplicate",installThemes:"Install themes",max4:"4 themes maximum",presetFail:"Theme not found: ",del:"Delete",themeNote:"Installing sends every theme in the list and replaces the ones already on the calculator."});
+const tr=k=>LANGS[lang][k]||k;
+let devName='',_tt;
+function toast(m){const e=$('#toast');e.textContent=m;e.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>e.classList.remove('show'),3200)}
+function log(m,type){if(type==='error')toast(m)}
+function applyLang(){
+  document.documentElement.lang=lang;
+  document.querySelectorAll('[data-i]').forEach(e=>e.textContent=tr(e.dataset.i));
+  document.querySelectorAll('.seg button').forEach(b=>b.classList.toggle('on',b.dataset.l===lang));
+  refresh();renderImgs();renderList();
+}
+document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{lang=b.dataset.l;try{localStorage.setItem('lang',lang)}catch(_){}applyLang()});
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const hex=a=>'0x'+a.toString(16).padStart(8,'0');
 
 /* ---------- Onglets ---------- */
-document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
-  document.querySelectorAll('nav button').forEach(x=>x.setAttribute('aria-selected',x===b));
+document.querySelectorAll('nav button[data-p]').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('nav button[data-p]').forEach(x=>x.setAttribute('aria-selected',x===b));
   document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on',p.id==='p-'+b.dataset.p));
+  scrollTo(0,0);
 });
 
 /* ---------- DFU ---------- */
 const out=(r,v,d)=>dev.controlTransferOut({requestType:'class',recipient:'interface',request:r,value:v,index:0},d||new Uint8Array());
 async function status(){
   const r=await dev.controlTransferIn({requestType:'class',recipient:'interface',request:3,value:0,index:0},6);
-  if(!r.data||r.data.byteLength<6)throw new Error('Statut DFU illisible');
+  if(!r.data||r.data.byteLength<6)throw new Error(tr('dfuErr'));
   const d=r.data,s=d.getUint8(4);await sleep(d.getUint8(1)|d.getUint8(2)<<8|d.getUint8(3)<<16);return s;
 }
 async function cmd(code,addr,what){
   const p=new DataView(new ArrayBuffer(5));p.setUint8(0,code);p.setUint32(1,addr>>>0,true);
   await out(1,0,new Uint8Array(p.buffer));
-  if(await status()!==4||await status()!==5)throw new Error(what+' : échec à '+hex(addr));
+  if(await status()!==4||await status()!==5)throw new Error(tr('dfuErr')+' '+hex(addr));
 }
 async function writeBlock(addr,chunk){
   await cmd(0x21,addr,'Adresse');
   await out(1,2,chunk);
-  if(await status()!==4||await status()!==5)throw new Error('Écriture : échec à '+hex(addr));
+  if(await status()!==4||await status()!==5)throw new Error(tr('dfuErr')+' '+hex(addr));
 }
 /* elements: [{address,data:Uint8Array}] */
 async function flash(elements,bar,txt,leaveAt){
-  if(!dev)throw new Error('Calculatrice non connectée.');
+  if(!dev)throw new Error(tr('off'));
   if(busy)return;busy=true;refresh();
   const B=$('#b-'+bar),T=$('#t-'+bar),F=B.firstElementChild;B.className='bar on';
   const pages=new Set();let total=0;
@@ -173,27 +312,27 @@ async function flash(elements,bar,txt,leaveAt){
   const warn=e=>{e.preventDefault();e.returnValue=''};addEventListener('beforeunload',warn);
   try{
     let n=0;const list=[...pages].sort((a,b)=>a-b);
-    for(const p of list){await cmd(0x41,p,'Effacement');n++;F.style.width=(n/list.length*30)+'%';T.textContent=`Effacement… ${Math.round(n/list.length*100)} %`}
+    for(const p of list){await cmd(0x41,p,'Effacement');n++;F.style.width=(n/list.length*30)+'%';T.textContent=tr('erase')+' '+Math.round(n/list.length*100)+' %'}
     let w=0;
     for(const e of elements)for(let o=0;o<e.data.length;o+=1024){
       const c=e.data.slice(o,o+1024);await writeBlock(e.address+o,c);w+=c.length;
-      F.style.width=(30+w/total*70)+'%';T.textContent=`Écriture… ${Math.round(w/total*100)} %`;
+      F.style.width=(30+w/total*70)+'%';T.textContent=tr('write')+' '+Math.round(w/total*100)+' %';
     }
-    if(leaveAt){try{await cmd(0x21,leaveAt,'Sortie DFU');await out(1,0);await status()}catch(_){}}B.classList.add('done');T.textContent=leaveAt?'Terminé : la calculatrice redémarre.':'Terminé.';log(txt,'success');
-  }catch(e){T.textContent='Échec : '+e.message;log('Échec : '+e.message,'error')}
+    if(leaveAt){try{await cmd(0x21,leaveAt,'Sortie DFU');await out(1,0);await status()}catch(_){}}B.classList.add('done');T.textContent=tr('done');
+  }catch(e){T.textContent=tr('fail')+e.message}
   finally{removeEventListener('beforeunload',warn);try{await lock?.release()}catch(_){}busy=false;refresh()}
 }
 function parseDfu(buf){
   const b=new Uint8Array(buf),v=new DataView(buf);
-  if(String.fromCharCode(...b.slice(0,5))!=='DfuSe')throw new Error('Fichier .dfu invalide (en-tête DfuSe absent).');
+  if(String.fromCharCode(...b.slice(0,5))!=='DfuSe')throw new Error(tr('badDfu'));
   let o=11;const n=b[10],els=[];
   for(let t=0;t<n;t++){
-    if(String.fromCharCode(...b.slice(o,o+6))!=='Target')throw new Error('Cible DFU invalide.');
+    if(String.fromCharCode(...b.slice(o,o+6))!=='Target')throw new Error(tr('badDfu'));
     o+=6+1+4+255;const size=v.getUint32(o,true);o+=4;const cnt=v.getUint32(o,true);o+=4;const end=o+size;
     for(let i=0;i<cnt;i++){const a=v.getUint32(o,true),s=v.getUint32(o+4,true);o+=8;els.push({address:a,data:b.slice(o,o+s)});o+=s}
     o=end;
   }
-  if(!els.length)throw new Error('Aucun élément dans le fichier .dfu.');
+  if(!els.length)throw new Error(tr('badDfu'));
   return els;
 }
 
@@ -228,7 +367,7 @@ function packArea(themes){
     t.icons.forEach((ic,i)=>{if(ic){e.setUint32(40+i*4,cur,true);e.setUint32(88+i*4,ic.length,true);blobs.push(ic);cur+=ic.length}});
     ents.push(new Uint8Array(e.buffer));
   }
-  if(cur>THEME_MAX)throw new Error('Thèmes trop volumineux pour la zone de 2 Mo');
+  if(cur>THEME_MAX)throw new Error(tr('tooBig'));
   const raw=cat([u32(0x87654321,3,themes.length),...ents,...blobs]);
   const pad=new Uint8Array(Math.ceil(raw.length/PAGE)*PAGE);pad.set(raw);return pad;
 }
@@ -242,11 +381,11 @@ const OC_F=(()=>{const m={exports:{}};(function(t,e,r){var n,o=(n=(n="undefined"
 const LINKER="MEMORY {\n  FLASH (rx) : ORIGIN = {{ flashStart }}, LENGTH = {{ flashLength }}\n  RAM (rwx) : ORIGIN = {{ ramStart }}, LENGTH = {{ ramLength }}\n}\n\nENTRY(_start);\n\n_userland_trampoline_address = {{ trampolineStart }};\n\nSECTIONS {\n  .eadk_app_info ORIGIN(FLASH) : {\n    LONG(0xDEC0BEBA);\n    KEEP(*(.rodata.eadk_api_level))\n    LONG(ADDR(.rodata.eadk_app_name) - ORIGIN(FLASH));\n    LONG(SIZEOF(.rodata.eadk_app_icon));\n    LONG(ADDR(.rodata.eadk_app_icon) - ORIGIN(FLASH));\n    LONG(_start - ORIGIN(FLASH));\n    LONG(_eadk_app_end - ORIGIN(FLASH));\n    LONG(0xDEC0BEBA);\n  } >FLASH\n\n  .rodata.eadk_app_name : {\n    KEEP(*(.rodata.eadk_app_name))\n  } >FLASH\n\n  .rodata.eadk_app_icon : {\n    KEEP(*(.rodata.eadk_app_icon))\n  } >FLASH\n\n  .text : {\n    . = ALIGN(4);\n    *(.text)\n    *(.text.*)\n  } >FLASH\n\n  .rodata : {\n    *(.rodata)\n    *(.rodata.*)\n    _eadk_app_end = .;\n  } >FLASH\n\n  .data : {\n    . = ALIGN(4);\n    _data_section_start_flash = LOADADDR(.data);\n    _data_section_start_ram = .;\n    *(.data)\n    *(.data.*)\n    _data_section_end_ram = .;\n  } >RAM AT >FLASH\n\n  .bss : {\n    . = ALIGN(4);\n    _bss_section_start_ram = .;\n    *(.bss)\n    *(.bss.*)\n    _bss_section_end_ram = .;\n  } >RAM\n\n  .heap : {\n    _heap_start = .;\n    . = (ORIGIN(RAM) + LENGTH(RAM));\n    _heap_end = .;\n  } >RAM\n}\n\nASSERT(SIZEOF(.eadk_app_info) == 32, \"Missing api level. Please define a .rodata.eadk_api_level section.\");\nASSERT(SIZEOF(.rodata.eadk_app_name) > 0, \"Missing app name. Please define a .rodata.eadk_app_name section.\");\nASSERT(SIZEOF(.rodata.eadk_app_icon) > 0, \"Missing app icon. Please define a .rodata.eadk_app_icon section.\");\n";
 const EADK=Uint8Array.from(atob("f0VMRgEBAQAAAAAAAAAAAAEAKAABAAAAAAAAAAAAAABQDwAAAAAABTQAAAAAACgALgAtAAZJCmgQRAhgBUmIQiG/DCIESxpgT/D/MhBGcEcAAAAAAAAAAAAAAAAAIHBHASBwR0/w/zBwRwAgcEcAIHBHT/D/MHBHT/b/cxO1CEYAkwVJACMURgloGkb/9/7/IEYCsBC9AL8AAAAAC0oMSwxJmxoBOwnSC0oAIQtLmxoBOwjSACEIRv/3/r8R+AELAvgBC+7nAvgBG/HnAAAAAAAAAAAAAAAAAAAAAAAAAAAC33BHELUB3wRG4LIQvRC1Ld8ERiBGEL2CsAKrA+kDABPfArBwR4KwAqsD6QMAFN8CsHBHgrACqwPpAwAS3wKwcEcQtRXfBEbgshC9ACIAIxO1bEbN6QAjIt8gYGFg1OkAAQKwEL0AIgAjE7VsRs3pACMh3yBgYWDU6QABArAQvRC1F98ERqCyEL0y33BHMd9wRwAiACMTtWxGzekAIzDfIGBhYNTpAAECsBC9M7QFTL34EFAkaASVJGgBkaRGArAwvGBHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEdDQzogKEdOVSBBcm0gRW1iZWRkZWQgVG9vbGNoYWluIDEwLTIwMjAtcTQtbWFqb3IpIDEwLjIuMSAyMDIwMTEwMyAocmVsZWFzZSkAAEdDQzogKEdOVSBBcm0gRW1iZWRkZWQgVG9vbGNoYWluIDEwLTIwMjAtcTQtbWFqb3IpIDEwLjIuMSAyMDIwMTEwMyAocmVsZWFzZSkAAEdDQzogKEdOVSBBcm0gRW1iZWRkZWQgVG9vbGNoYWluIDEwLTIwMjAtcTQtbWFqb3IpIDEwLjIuMSAyMDIwMTEwMyAocmVsZWFzZSkAQTMAAABhZWFiaQABKQAAAAU3RS1NAAYNB00JAgoIEgQUARUBFwMYARkBGgEbARwBHgQiAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAHQAAAAAAAAAAAAAAAAADAB4AAAAAAAAAAAAAAAAAAwAlAAEAAAAAAAAAAAAAAAAAAgAEAAAAHAAAAAAAAAAAAAIAAQAAAAAAAAAAAAAAAAAEAAEAAAAAAAAAAAAAAAAABQABAAAAAAAAAAAAAAAAAAYAAQAAAAAAAAAAAAAAAAAHAAEAAAAAAAAAAAAAAAAACAABAAAAAAAAAAAAAAAAAAkAAQAAAAAAAAAAAAAAAAAKAAQAAAAgAAAAAAAAAAAACgABAAAAAAAAAAAAAAAAAAwABAAAADAAAAAAAAAAAAAMAAQAAAAAAAAAAAAAAAAAIQAEAAAAAAAAAAAAAAAAACMABAAAAAAAAAAAAAAAAAAlAAQAAAAAAAAAAAAAAAAAHQABAAAAAAAAAAAAAAAAAA4AAQAAAAAAAAAAAAAAAAAPAAEAAAAAAAAAAAAAAAAAEAABAAAAAAAAAAAAAAAAABEAAQAAAAAAAAAAAAAAAAASAAEAAAAAAAAAAAAAAAAAEwABAAAAAAAAAAAAAAAAABQAAQAAAAAAAAAAAAAAAAAVAAEAAAAAAAAAAAAAAAAAFgABAAAAAAAAAAAAAAAAABcAAQAAAAAAAAAAAAAAAAAYAAEAAAAAAAAAAAAAAAAAGQABAAAAAAAAAAAAAAAAABoAAQAAAAAAAAAAAAAAAAAbAAQAAAAYAAAAAAAAAAAAGwAEAAAAAAAAAAAAAAAAAB4AAAAAAAAAAAAAAAAAAwABAAAAAAAAAAAAAAAAAAMAAgAAAAAAAAAAAAAAAAADAAQAAAAAAAAAAAAAAAAAAwAFAAAAAAAAAAAAAAAAAAMABgAAAAAAAAAAAAAAAAADAAcAAAAAAAAAAAAAAAAAAwAIAAAAAAAAAAAAAAAAAAMACQAAAAAAAAAAAAAAAAADAAoAAAAAAAAAAAAAAAAAAwAMAAAAAAAAAAAAAAAAAAMADgAAAAAAAAAAAAAAAAADAA8AAAAAAAAAAAAAAAAAAwAQAAAAAAAAAAAAAAAAAAMAEQAAAAAAAAAAAAAAAAADABIAAAAAAAAAAAAAAAAAAwATAAAAAAAAAAAAAAAAAAMAFAAAAAAAAAAAAAAAAAADABUAAAAAAAAAAAAAAAAAAwAWAAAAAAAAAAAAAAAAAAMAFwAAAAAAAAAAAAAAAAADABgAAAAAAAAAAAAAAAAAAwAZAAAAAAAAAAAAAAAAAAMAGgAAAAAAAAAAAAAAAAADABsAAAAAAAAAAAAAAAAAAwAgAAAAAAAAAAAAAAAAAAMAIQAAAAAAAAAAAAAAAAADACMAAAAAAAAAAAAAAAAAAwAnAAAAAAAAAAAAAAAAAAMAKAAAAAAAAAAAAAAAAAADACkAAAAAAAAAAAAAAAAAAwAqAAcAAAABAAAACgAAABIAFwAWAAAAAQAAAA4AAAASABEALQAAAAAAAAAAAAAAEAAAADMAAAABAAAADgAAABIAEgD6AAAAAAAAAAQAAAARACMAUgAAAAEAAAAEAAAAEgAEAFkAAAABAAAAGgAAABIAFgB2AAAAAAAAAAAAAAAQAAAAjgAAAAAAAAAAAAAAEAAAAJgAAAABAAAABAAAABIABQCgAAAAAQAAAAYAAAASAAYApgAAAAEAAAAcAAAAEgAbAL8AAAABAAAAKAAAABIAAgDFAAAAAQAAAAQAAAASABkA2AAAAAAAAAAAAAAAEAAAAOQAAAAAAAAAAAAAABAAAAD5AAAAAAAAAAAAAAAQAAAAEgEAAAAAAAAAAAAAEAAAACUBAAABAAAARAAAABIADAAsAQAAAQAAAAQAAAASAAgAMwEAAAAAAAAAAAAAEAAAAFABAAABAAAACgAAABIAEABcAQAAAQAAAA4AAAASABMAcwEAAAAAAAAAAAAAEAAAAIkBAAAAAAAAAAAAABAAAACOAQAAAQAAAAQAAAASABgAoQEAAAAAAAAEAAAAEQAhALQBAAAAAAAAAAAAABAAAADLAQAAAQAAABoAAAASABUA3gEAAAEAAAAkAAAAEgAKAOUBAAAAAAAAAAAAABAAAAD/AQAAAQAAABoAAAASABoAEgIAAAEAAAAEAAAAEgAHABgCAAABAAAACgAAABIAFAA1AgAAAQAAAAQAAAASAA4AUwIAAAEAAAAKAAAAEgAPAG0CAAABAAAABgAAABIACQAAJHQAJGQAZWFka19ldmVudF9nZXQAZWFka19kaXNwbGF5X3B1c2hfcmVjdABlcnJubwBlYWRrX2Rpc3BsYXlfcHVzaF9yZWN0X3VuaWZvcm0AX2ZzdGF0AF9aMjNlYWRrX2tleWJvYXJkX3BvcF9zdGF0ZXYAX2RhdGFfc2VjdGlvbl9zdGFydF9yYW0AX2hlYXBfZW5kAF9pc2F0dHkAX29wZW4AZWFka19kaXNwbGF5X2RyYXdfc3RyaW5nAF9zYnJrAGVhZGtfdGltaW5nX21zbGVlcABfaGVhcF9zdGFydABfYnNzX3NlY3Rpb25fZW5kX3JhbQBfZWFka19leHRlcm5hbF9kYXRhX3NpemUAX2VhZGtfZXh0ZXJuYWxfZGF0YV9zdGFydABfbHNlZWsAX3VzZXJsYW5kX3RyYW1wb2xpbmVfYWRkcmVzcwBlYWRrX3JhbmRvbQBlYWRrX2Rpc3BsYXlfcHVsbF9yZWN0AF9kYXRhX3NlY3Rpb25fZW5kX3JhbQBtYWluAGVhZGtfdGltaW5nX3VzbGVlcABlYWRrX2V4dGVybmFsX2RhdGEAX2Jzc19zZWN0aW9uX3N0YXJ0X3JhbQBlYWRrX2tleWJvYXJkX3NjYW4AX3dyaXRlAF9kYXRhX3NlY3Rpb25fc3RhcnRfZmxhc2gAZWFka190aW1pbmdfbWlsbGlzAF9yZWFkAGVhZGtfZGlzcGxheV93YWl0X2Zvcl92YmxhbmsAZWFka19iYWNrbGlnaHRfc2V0X2JyaWdodG5lc3MAZWFka19iYWNrbGlnaHRfYnJpZ2h0bmVzcwBfY2xvc2UAHAAAAAIDAAAgAAAAAksAACQAAAACRQAAFAAAAApOAAAgAAAAAgEAABwAAAAeWwAAMAAAAAJKAAA0AAAAAloAADgAAAACYQAAPAAAAAJeAABAAAAAAlIAABgAAAACAgAAAAAAAAJXAAAAAAAAAlQAAAAAAAACUwAAAAAAAAJRAAAALnN5bXRhYgAuc3RydGFiAC5zaHN0cnRhYgAudGV4dAAucmVsLnRleHQuX3NicmsALnRleHQuX2ZzdGF0AC50ZXh0Ll9pc2F0dHkALnRleHQuX29wZW4ALnRleHQuX3JlYWQALnRleHQuX2xzZWVrAC50ZXh0Ll9jbG9zZQAucmVsLnRleHQuX3dyaXRlAC5yZWwudGV4dC5fc3RhcnQALnRleHQuZWFka19iYWNrbGlnaHRfc2V0X2JyaWdodG5lc3MALnRleHQuZWFka19iYWNrbGlnaHRfYnJpZ2h0bmVzcwAudGV4dC5lYWRrX3JhbmRvbQAudGV4dC5lYWRrX2Rpc3BsYXlfcHVzaF9yZWN0AC50ZXh0LmVhZGtfZGlzcGxheV9wdXNoX3JlY3RfdW5pZm9ybQAudGV4dC5lYWRrX2Rpc3BsYXlfcHVsbF9yZWN0AC50ZXh0LmVhZGtfZGlzcGxheV93YWl0X2Zvcl92YmxhbmsALnRleHQuZWFka19rZXlib2FyZF9zY2FuAC50ZXh0Ll9aMjNlYWRrX2tleWJvYXJkX3BvcF9zdGF0ZXYALnRleHQuZWFka19l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"),c=>c.charCodeAt(0));
 const WASM_LD='b9dadb68.wasm',WASM_OC='9a1d84f2.wasm',ASSETS='assets/';
-const REPOS={os:'SaltyMold/Salty-OS',ab:'SaltyMold/ABLauncher-Numworks'};
+const REPOS={os:'SaltyMold/Salty-OS',ab:'SaltyMold/ABLauncher-Numworks',inst:'SaltyMold/Salty-OS-Installer'};
 const SUP=['n0110','n0115','n0120'];
 const wc={};
 function wasm(n){return wc[n]||(wc[n]=(async()=>{for(const u of[ASSETS+n,'https://cdn.numworks.com/'+n]){try{const r=await fetch(u);if(r.ok){const b=await r.arrayBuffer();if(new Uint8Array(b).slice(0,4).join()==='0,97,115,109')return b}}catch(_){}}
-  delete wc[n];throw new Error('Fichier '+n+' introuvable : placez-le dans le dossier assets/ à côté de la page.')})())}
+  delete wc[n];throw new Error(tr('missing')+n)})())}
 async function ld(args,inputs){const wb=await wasm(WASM_LD);return new Promise((res,rej)=>{const o={wasmBinary:wb,locateFile:x=>x,
   preRun(){for(const[k,v]of Object.entries(inputs))o.FS.writeFile(k,v)},printErr(t){o.errorLog=(o.errorLog||'')+t+'\n'},onAbort:rej,
   arguments:args.concat(['--output','output.elf']),postRun(){o.errorLog?rej(new Error(o.errorLog)):res(o.FS.readFile('output.elf'))}};LD_F(o)})}
@@ -264,9 +403,9 @@ function latest(repo){return rel[repo]||(rel[repo]=fetch('https://api.github.com
 async function getAsset(repo,name){
   try{const r=await fetch(ASSETS+name,{cache:'no-cache'});if(r.ok){const b=await r.arrayBuffer();if(b.byteLength&&new Uint8Array(b)[0]!==60)return b}}catch(_){}
   const a=(await latest(repo)).assets.find(x=>x.name===name);
-  if(!a)throw new Error(name+' absent de la dernière release.');
+  if(!a)throw new Error(name+tr('notFound'));
   const r=await fetch(a.url,{headers:{Accept:'application/octet-stream'}});
-  if(!r.ok)throw new Error('Téléchargement impossible ('+r.status+').');return r.arrayBuffer();
+  if(!r.ok)throw new Error(tr('dlFail')+' ('+r.status+')');return r.arrayBuffer();
 }
 
 /* ===== Lecture mémoire DFU et infos de la calculatrice ===== */
@@ -274,7 +413,7 @@ async function readMem(addr,len){
   await cmd(0x21,addr,'Adresse');try{await out(6,0);await status()}catch(_){}
   const res=new Uint8Array(len);let o=0,blk=2;
   while(o<len){const r=await dev.controlTransferIn({requestType:'class',recipient:'interface',request:2,value:blk++,index:0},Math.min(1024,len-o));
-    if(r.status!=='ok'||!r.data.byteLength)throw new Error('Lecture impossible à '+hex(addr+o));
+    if(r.status!=='ok'||!r.data.byteLength)throw new Error(tr('readFail'));
     res.set(new Uint8Array(r.data.buffer,r.data.byteOffset,r.data.byteLength),o);o+=r.data.byteLength}
   try{await out(6,0)}catch(_){}return res;
 }
@@ -282,59 +421,61 @@ const M={F00D:[0xF0,0x0D,0xC0,0xDE],FEED:[0xFE,0xED,0xC0,0xDE],BAD:[0xBA,0xDB,0x
 const has=(a,m,o=0)=>a.length>=o+4&&m.every((x,i)=>a[o+i]===x);
 async function readInfo(){
   const FL=0x08000000,RAM=devModel==='n0120'?0x24000000:0x20000000;
-  for(const[off,sz]of[[428,24],[452,32]]){const h=await readMem(FL+off,sz);if(has(h,M.F00D)&&has(h,M.F00D,h.length-4))throw new Error('Ce firmware ne gère pas les apps externes.')}
+  for(const[off,sz]of[[428,24],[452,32]]){const h=await readMem(FL+off,sz);if(has(h,M.F00D)&&has(h,M.F00D,h.length-4))throw new Error(tr('noExt'))}
   const si=await readMem(RAM,16);if(!has(si,M.BAD)||!has(si,M.BAD,12))throw new Error('Infos de slot corrompues.');
   const uA=new DataView(si.buffer).getUint32(8,true),uh=await readMem(uA,48),v=new DataView(uh.buffer);
-  if(!has(uh,M.FEED))throw new Error('En-tête userland corrompu.');
+  if(!has(uh,M.FEED))throw new Error(tr('badHdr'));
   const f={extStart:v.getUint32(20,true),extEnd:v.getUint32(24,true)};let n=28;
   if(!has(uh,M.FEED,n)){f.ramStart=v.getUint32(28,true);f.ramEnd=v.getUint32(32,true);n=36;if(!has(uh,M.FEED,n))n=44}
-  if(!has(uh,M.FEED,n)||f.ramStart===undefined)throw new Error('Ce firmware ne gère pas les apps externes.');
+  if(!has(uh,M.FEED,n)||f.ramStart===undefined)throw new Error(tr('noExt'));
   f.tramp=uA+n+4+8;return f;
 }
 
 /* ===== Connexion ===== */
 function modelOf(d){return 'n'+((d.deviceVersionMajor<<8)|(d.deviceVersionMinor<<4)|d.deviceVersionSubminor).toString(16).padStart(4,'0')}
 function refresh(){
-  $('#osModel').textContent=devModel||'non connectée';
-  $('#osFile').textContent=osLocal?osLocal.name:(devModel?'userland.allow3rdparty.B.'+devModel+'.dfu':'—');
-  $('#abFile').textContent=abLocal?abLocal.name:'ABLauncher.nwa';
-  $('#go-os').disabled=busy||!dev||!(osLocal||SUP.includes(devModel));
-  $('#go-app').disabled=busy||!dev;$('#go-theme').disabled=busy||!dev;
-  $('#connectBtn').disabled=busy||!!dev;
+  const ok=!!dev,all=s=>document.querySelectorAll(s);
+  const calcImg=ok?'src/calculator_on.png':'src/calculator_off.png';
+  all('.calc').forEach(e=>e.innerHTML='<img src="'+calcImg+'" alt="NumWorks" width="330" height="641">');
+  $('#go-os').hidden=!ok;$('#go-app').hidden=!ok;$('#go-theme').hidden=!ok;
+  $('#go-os').disabled=busy||!SUP.includes(devModel);
+  $('#go-app').disabled=busy;$('#go-theme').disabled=busy||!THEMES.length;$('#go-theme').textContent=tr('installThemes')+' ('+THEMES.length+')';
+  all('.connectBtn').forEach(b=>b.hidden=ok);
+  all('.devTitle').forEach(e=>e.textContent=ok?devName:tr('someone'));
+  all('.bState').forEach(e=>e.textContent=busy?tr('busy'):ok?tr('on'):tr('off'));
+  all('.bModel').forEach(e=>e.textContent=tr('model')+' '+(ok?devModel.toUpperCase():'N/A'));
+  all('.bSerial').forEach(e=>e.textContent=tr('serial')+' '+(ok?(devSerial||'—'):'N/A'));
 }
-$('#connectBtn').onclick=async()=>{
-  if(!navigator.usb){log('WebUSB indisponible : utilisez Chrome, Edge ou Brave (en https ou localhost).','error');return}
+const doConnect=async()=>{
+  if(!navigator.usb){toast(tr('noUsb'));return}
   try{
     const d=await navigator.usb.requestDevice({filters:IDS});
     await d.open();await d.selectConfiguration(d.configurations[0].configurationValue);await d.claimInterface(0);
-    dev=d;devModel=modelOf(d);$('#connectBtn').textContent='Connectée';
-    $('#devInfo').innerHTML='<b>'+(d.productName||'NumWorks')+'</b> · modèle '+devModel+' · n° de série '+(d.serialNumber||'inconnu');
-    log('Calculatrice connectée ('+devModel+').','success');refresh();
-    navigator.usb.ondisconnect=e=>{if(e.device===dev){dev=null;devModel=null;$('#connectBtn').textContent='Reconnecter';$('#devInfo').textContent='Calculatrice déconnectée.';log('Calculatrice déconnectée.','error');refresh()}};
-  }catch(e){log(e.name==='NotFoundError'?'Aucune calculatrice sélectionnée.':'Connexion impossible : '+e.message,'error')}
+    dev=d;devModel=modelOf(d);devName=d.productName||'NumWorks';devSerial=d.serialNumber||'';refresh();
+    navigator.usb.ondisconnect=e=>{if(e.device===dev){dev=null;devModel=null;devSerial='';refresh();toast(tr('disc'))}};
+  }catch(e){if(e.name!=='NotFoundError')toast(tr('connFail')+e.message)}
 };
+document.querySelectorAll('.connectBtn').forEach(b=>b.onclick=doConnect);
 
 /* ===== SaltyOS & ABLauncher ===== */
-for(const[k,r]of[['osTag',REPOS.os],['abTag',REPOS.ab]])latest(r).then(j=>$('#'+k).textContent=j.tag_name).catch(()=>$('#'+k).textContent='indisponible');
-$('#in-os').onchange=e=>{osLocal=e.target.files[0]||null;refresh()};
-$('#in-nwa').onchange=e=>{abLocal=e.target.files[0]||null;refresh()};
+for(const[k,r]of[['osTag',REPOS.os],['abTag',REPOS.ab]])latest(r).then(j=>$('#'+k).textContent=j.tag_name).catch(()=>$('#'+k).textContent='—');
 $('#go-os').onclick=async()=>{try{
-  const buf=osLocal?await osLocal.arrayBuffer():await getAsset(REPOS.os,'userland.allow3rdparty.B.'+devModel+'.dfu');
-  flash(parseDfu(buf),'os','SaltyOS envoyé dans le slot B.');
+  const buf=await getAsset(REPOS.os,'userland.allow3rdparty.B.'+devModel+'.dfu');
+  flash(parseDfu(buf),'os','');
 }catch(e){$('#t-os').textContent=e.message;log(e.message,'error')}};
 $('#go-app').onclick=async()=>{
   const B=$('#b-app'),T=$('#t-app'),step=m=>{B.className='bar on';T.textContent=m};
   busy=true;refresh();let data,start;
   try{
-    step('Téléchargement de ABLauncher…');
-    const nwa=new Uint8Array(abLocal?await abLocal.arrayBuffer():await getAsset(REPOS.ab,'ABLauncher.nwa'));
-    step('Lecture des informations de la calculatrice…');const f=await readInfo();start=f.extStart;
-    step('Liaison de l\'application…');
+    step(tr('dl'));
+    const nwa=new Uint8Array(await getAsset(REPOS.ab,'ABLauncher.nwa'));
+    step(tr('read'));const f=await readInfo();start=f.extStart;
+    step(tr('link'));
     const bin=await linkApp(nwa,{flashStart:f.extStart,flashLength:f.extEnd-f.extStart,ramStart:f.ramStart,ramLength:f.ramEnd-f.ramStart,trampolineStart:f.tramp});
-    const S=65536,size=Math.ceil(bin.length/S)*S;if(f.extStart+size>f.extEnd)throw new Error('Pas assez de place pour l\'application.');
+    const S=65536,size=Math.ceil(bin.length/S)*S;if(f.extStart+size>f.extEnd)throw new Error(tr('noSpace'));
     data=new Uint8Array(size+(f.extStart+size<f.extEnd?S:0)).fill(255);data.set(bin);
-  }catch(e){T.textContent='Échec : '+(e.message||e);log('Échec : '+(e.message||e),'error');busy=false;refresh();return}
-  busy=false;await flash([{address:start,data}],'app','ABLauncher installé.',start);
+  }catch(e){T.textContent=tr('fail')+(e.message||e);busy=false;refresh();return}
+  busy=false;await flash([{address:start,data}],'app','',start);
 };
 
 /* ===== Éditeur de thème ===== */
@@ -382,9 +523,10 @@ MintLight 0xb1fef7
 TextColor 0xffffff
 TextColorHover 0x000000
 WallpaperColor 0xffffff`;
-const T={name:'Mon thème',circle:0,hover:false,pal:[],wall:null,icons:Array(12).fill(null)};
-const parsePal=t=>t.split(/\r?\n/).map(l=>l.trim()).filter(l=>l&&l[0]!=='#').map(l=>{const m=l.match(/^(\S+)\s+0x([0-9a-fA-F]+)$/);if(!m)throw new Error('Ligne de palette invalide : '+l);return{n:m[1],v:'#'+m[2].toLowerCase().padStart(6,'0')}});
-T.pal=parsePal(PAL0);
+const parsePal=t=>t.split(/\r?\n/).map(l=>l.trim()).filter(l=>l&&l[0]!=='#').map(l=>{const m=l.match(/^(\S+)\s+0x([0-9a-fA-F]+)$/);if(!m)throw new Error(tr('badPal'));return{n:m[1],v:'#'+m[2].toLowerCase().padStart(6,'0')}});
+const MAXT=4;
+const mkTheme=n=>({name:n,circle:0,hover:false,pal:parsePal(PAL0),wall:null,icons:Array(12).fill(null),src:null});
+const THEMES=[mkTheme('Theme 1')];let cur=0,T=THEMES[0];
 $('#tCircle').innerHTML=[0,1,2,3,4,5,6,7].map(i=>'<option>'+i+'</option>').join('');
 async function toImg(blob,w,h){
   const bmp=await createImageBitmap(blob),c=document.createElement('canvas');c.width=w;c.height=h;
@@ -395,14 +537,15 @@ async function toImg(blob,w,h){
   return{png,rgb,w,h,url:URL.createObjectURL(new Blob([png],{type:'image/png'}))};
 }
 function render(){
-  $('#tName').value=T.name;$('#tCircle').value=T.circle;$('#tHover').checked=T.hover;
+  renderList();$('#tName').value=T.name;$('#tCircle').value=T.circle;$('#tHover').checked=T.hover;
   $('#pal').innerHTML=T.pal.map((p,i)=>'<label class="sw"><input type="color" data-i="'+i+'" value="'+p.v+'"><span>'+p.n+'<br><small>'+p.v+'</small></span></label>').join('');
   renderImgs();
 }
 function renderImgs(){
-  const th=(im,t,w)=>'<div class="th" data-t="'+t+'">'+(im?'<img src="'+im.url+'" alt="">':'<span>Aucune</span>')+'</div>';
-  $('#wallTh').outerHTML='<div class="th" id="wallTh" data-t="wall" style="height:130px">'+(T.wall?'<img src="'+T.wall.url+'" alt="">':'<span>Aucun</span>')+'</div>';
-  $('#icons').innerHTML=ICN.map((n,i)=>'<div class="ic">'+th(T.icons[i],i)+n+'<br><button data-t="'+i+'">Choisir</button> <button data-c="'+i+'">×</button></div>').join('');
+  const th=(im,t,w)=>'<div class="th" data-t="'+t+'">'+(im?'<img src="'+im.url+'" alt="">':'<span>'+tr('none')+'</span>')+'</div>';
+  $('#wallTh').innerHTML=T.wall?'<img src="'+T.wall.url+'" alt="">':'<span>'+tr('none')+'</span>';
+  $('#icCount').textContent='('+T.icons.filter(Boolean).length+' / '+ICN.length+')';
+  $('#icons').innerHTML=ICN.map((n,i)=>'<div class="ic">'+th(T.icons[i],i)+n+'<br><button data-t="'+i+'">'+tr('choose')+'</button> <button data-c="'+i+'">×</button></div>').join('');
 }
 let tgt=null;
 document.addEventListener('click',e=>{
@@ -411,8 +554,8 @@ document.addEventListener('click',e=>{
   if(c){if(c.dataset.c==='wall')T.wall=null;else T.icons[+c.dataset.c]=null;renderImgs()}
 });
 $('#in-img').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f||tgt===null)return;
-  try{const w=tgt==='wall';const im=await toImg(f,w?320:55,w?240:56);if(w)T.wall=im;else T.icons[tgt]=im;renderImgs()}catch(x){log('Image illisible : '+x.message,'error')}};
-$('#tName').oninput=e=>T.name=e.target.value;
+  try{const w=tgt==='wall';const im=await toImg(f,w?320:55,w?240:56);if(w)T.wall=im;else T.icons[tgt]=im;renderImgs()}catch(x){toast(tr('badImg'))}};
+$('#tName').oninput=e=>{T.name=e.target.value;renderList()};
 $('#tCircle').onchange=e=>T.circle=+e.target.value;
 $('#tHover').onchange=e=>T.hover=e.target.checked;
 $('#pal').oninput=e=>{const i=+e.target.dataset.i;T.pal[i].v=e.target.value;e.target.nextElementSibling.querySelector('small').textContent=e.target.value};
@@ -431,11 +574,11 @@ function zip(files){
 }
 async function unzip(buf){
   const v=new DataView(buf),b=new Uint8Array(buf),td=new TextDecoder(),res=new Map();let e=b.length-22;
-  while(e>=0&&v.getUint32(e,true)!==0x06054b50)e--;if(e<0)throw new Error('Zip invalide.');
+  while(e>=0&&v.getUint32(e,true)!==0x06054b50)e--;if(e<0)throw new Error(tr('badZip'));
   let p=v.getUint32(e+16,true);const cnt=v.getUint16(e+10,true);
   for(let i=0;i<cnt;i++){const m=v.getUint16(p+10,true),cs=v.getUint32(p+20,true),nl=v.getUint16(p+28,true),xl=v.getUint16(p+30,true),cl=v.getUint16(p+32,true),lo=v.getUint32(p+42,true),name=td.decode(b.subarray(p+46,p+46+nl));p+=46+nl+xl+cl;
     if(name.endsWith('/'))continue;const st=lo+30+v.getUint16(lo+26,true)+v.getUint16(lo+28,true);let d=b.subarray(st,st+cs);
-    if(m===8)d=new Uint8Array(await new Response(new Blob([d]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer());else if(m!==0)throw new Error('Compression zip non gérée.');
+    if(m===8)d=new Uint8Array(await new Response(new Blob([d]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer());else if(m!==0)throw new Error(tr('badZip'));
     res.set(name,d)}
   return res;
 }
@@ -446,24 +589,66 @@ $('#exp').onclick=()=>{
     {path:nm+'/variables.txt',data:enc('defaultCircleLevel '+T.circle+'\nisAppNameBackgroundHover '+(T.hover?1:0))}];
   if(T.wall)f.push({path:nm+'/wallpaper.png',data:T.wall.png});
   T.icons.forEach((im,i)=>im&&f.push({path:nm+'/'+ICN[i]+'_icon.png',data:im.png}));
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([zip(f)],{type:'application/zip'}));a.download=nm+'.zip';a.click();log('Thème enregistré : '+nm+'.zip','success');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([zip(f)],{type:'application/zip'}));a.download=nm+'.zip';a.click();
 };
 $('#imp').onclick=()=>$('#in-zip').click();
-$('#in-zip').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
+async function themeFromZip(buf){
+  const files=await unzip(buf),key=[...files.keys()].find(k=>/(^|\/)name\.txt$/.test(k)&&!k.startsWith('__MACOSX'));
+  if(!key)throw new Error(tr('badZip'));
+  const dir=key.slice(0,key.length-8),get=n=>files.get(dir+n),td=new TextDecoder(),nt={src:null};
+  nt.name=td.decode(get('name.txt')).trim().split(/\r?\n/)[0].trim().slice(0,15);
+  if(!get('palette.txt'))throw new Error(tr('badZip'));
+  nt.pal=parsePal(td.decode(get('palette.txt')));if(!nt.pal.length||nt.pal.length>64)throw new Error(tr('badPal'));
+  nt.circle=0;nt.hover=false;
+  if(get('variables.txt'))for(const l of td.decode(get('variables.txt')).split(/\r?\n/)){const m=l.trim().match(/^(\S+)\s+(\d+)$/);if(!m)continue;
+    if(m[1]==='defaultCircleLevel')nt.circle=Math.min(7,+m[2]);if(m[1]==='isAppNameBackgroundHover')nt.hover=+m[2]===1}
+  nt.wall=get('wallpaper.png')?await toImg(new Blob([get('wallpaper.png')]),320,240):null;
+  nt.icons=await Promise.all(ICN.map(n=>get(n+'_icon.png')?toImg(new Blob([get(n+'_icon.png')]),55,56):null));
+  return nt;
+}
+
+/* ----- Liste de thèmes (4 maximum, comme THEME_COUNT_MAX) ----- */
+const escH=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function renderList(){
+  $('#tCount').textContent='('+THEMES.length+' / '+MAXT+')';
+  $('#tlist').innerHTML=THEMES.map((t,i)=>'<div class="tchip'+(i===cur?' on':'')+'"><button class="tsel" data-ts="'+i+'" aria-pressed="'+(i===cur)+'">'+escH(t.name.trim()||'—')+'</button><button class="tdel" data-td="'+i+'" aria-label="'+escH(tr('del'))+'">×</button></div>').join('');
+  $('#tNew').disabled=$('#tDup').disabled=THEMES.length>=MAXT;
+  document.querySelectorAll('[data-pr]').forEach(b=>b.classList.toggle('done',THEMES.some(t=>t.src===b.dataset.pr)));
+}
+function select(i){cur=i;T=THEMES[i];render()}
+function addTheme(t){
+  if(THEMES.length>=MAXT){toast(tr('max4'));return false}
+  THEMES.push(t);select(THEMES.length-1);refresh();return true;
+}
+$('#tlist').onclick=e=>{
+  const s=e.target.closest('[data-ts]'),d=e.target.closest('[data-td]');
+  if(s)select(+s.dataset.ts);
+  if(d){const i=+d.dataset.td;
+    if(THEMES.length===1){THEMES[0]=mkTheme('Theme 1');select(0)}
+    else{THEMES.splice(i,1);select(i<cur?cur-1:Math.min(cur,THEMES.length-1))}
+    refresh()}
+};
+$('#tNew').onclick=()=>addTheme(mkTheme('Theme '+(THEMES.length+1)));
+$('#tDup').onclick=()=>addTheme({...T,name:(T.name.slice(0,12)+' 2').trim(),pal:T.pal.map(p=>({...p})),icons:[...T.icons],src:null});
+
+/* ----- Thèmes de base : themes/{id}.zip (ajoute une entrée pour en proposer d'autres) ----- */
+const PRESETS=[{id:'omega',name:'Omega'},{id:'kawaii',name:'Kawaii'}];
+$('#presets').innerHTML=PRESETS.map(p=>'<button class="ghost pre" data-pr="'+p.id+'">'+escH(p.name)+'</button>').join('');
+async function loadPreset(p,btn){
+  const ex=THEMES.findIndex(t=>t.src===p.id);
+  if(ex>=0){select(ex);return}
+  btn.disabled=true;let buf;
   try{
-    const files=await unzip(await f.arrayBuffer()),key=[...files.keys()].find(k=>/(^|\/)name\.txt$/.test(k)&&!k.startsWith('__MACOSX'));
-    if(!key)throw new Error('name.txt introuvable dans le zip.');
-    const dir=key.slice(0,key.length-8),get=n=>files.get(dir+n),td=new TextDecoder(),nt={};
-    nt.name=td.decode(get('name.txt')).trim().split(/\r?\n/)[0].trim().slice(0,15);
-    if(!get('palette.txt'))throw new Error('palette.txt manquant.');
-    nt.pal=parsePal(td.decode(get('palette.txt')));if(!nt.pal.length||nt.pal.length>64)throw new Error('La palette doit contenir 1 à 64 couleurs.');
-    nt.circle=0;nt.hover=false;
-    if(get('variables.txt'))for(const l of td.decode(get('variables.txt')).split(/\r?\n/)){const m=l.trim().match(/^(\S+)\s+(\d+)$/);if(!m)continue;
-      if(m[1]==='defaultCircleLevel')nt.circle=Math.min(7,+m[2]);if(m[1]==='isAppNameBackgroundHover')nt.hover=+m[2]===1}
-    nt.wall=get('wallpaper.png')?await toImg(new Blob([get('wallpaper.png')]),320,240):null;
-    nt.icons=await Promise.all(ICN.map(n=>get(n+'_icon.png')?toImg(new Blob([get(n+'_icon.png')]),55,56):null));
-    Object.assign(T,nt);render();log('Thème « '+T.name+' » importé.','success');
-  }catch(x){log('Import impossible : '+x.message,'error')}};
+    const r=await fetch('themes/'+p.id+'.zip',{cache:'no-cache'});if(!r.ok)throw 0;
+    buf=await r.arrayBuffer();if(new Uint8Array(buf.slice(0,2)).join()!=='80,75')throw 0;
+  }catch(_){toast(tr('presetFail')+'themes/'+p.id+'.zip');btn.disabled=false;return}
+  try{const t=await themeFromZip(buf);t.src=p.id;addTheme(t)}catch(x){toast(x.message)}
+  btn.disabled=false;
+}
+$('#presets').onclick=e=>{const b=e.target.closest('[data-pr]');if(b)loadPreset(PRESETS.find(p=>p.id===b.dataset.pr),b)};
+
+$('#in-zip').onchange=async e=>{const fs=[...e.target.files];e.target.value='';
+  for(const f of fs){try{if(!addTheme(await themeFromZip(await f.arrayBuffer())))break}catch(x){toast(x.message)}}};
 
 function makeWall(im){const rows=16,cnt=Math.ceil(im.h/rows),ch=[];
   for(let k=0;k<cnt;k++)ch.push(lz4(im.rgb.subarray(k*rows*im.w*2,Math.min(im.h,(k+1)*rows)*im.w*2)));
@@ -471,13 +656,36 @@ function makeWall(im){const rows=16,cnt=Math.ceil(im.h/rows),ch=[];
   return cat([u32(im.w,im.h,rows,cnt),u32(...offs),u32(...ch.map(c=>c.length)),...ch])}
 $('#go-theme').onclick=()=>{
   try{
-    const nm=T.name.trim();if(!nm)throw new Error('Donnez un nom au thème.');
-    const bin=packArea([{name:nm,cols:T.pal.map(p=>parseInt(p.v.slice(1),16)),vars:{defaultCircleLevel:T.circle,isAppNameBackgroundHover:T.hover?1:0},
-      wall:T.wall?makeWall(T.wall):null,icons:T.icons.map(im=>im?lz4(im.rgb):null)}]);
-    flash([{address:THEME_ADDR,data:bin}],'theme','Thème « '+nm+' » installé.');
+    if(!THEMES.length||THEMES.some(t=>!t.name.trim()))throw new Error(tr('needName'));
+    const bin=packArea(THEMES.map(t=>({name:t.name.trim(),cols:t.pal.map(p=>parseInt(p.v.slice(1),16)),vars:{defaultCircleLevel:t.circle,isAppNameBackgroundHover:t.hover?1:0},
+      wall:t.wall?makeWall(t.wall):null,icons:t.icons.map(im=>im?lz4(im.rgb):null)})));
+    flash([{address:THEME_ADDR,data:bin}],'theme','');
   }catch(e){$('#t-theme').textContent=e.message;log(e.message,'error')}
 };
-render();refresh();
+/* ===== Interface : calculatrice, menu GitHub, thème, projets ===== */
+const CALC_ON='<img src="src/calculator_on.png" alt="NumWorks" width="330" height="641">';
+const CALC_OFF='<img src="src/calculator_off.png" alt="NumWorks" width="330" height="641">';
+document.querySelectorAll('.calc').forEach(e=>e.innerHTML=CALC_OFF);
+
+const gb=$('#ghBtn'),gm=$('#ghMenu');
+const closeGh=()=>{gm.hidden=true;gb.setAttribute('aria-expanded','false')};
+gb.onclick=e=>{e.stopPropagation();gm.hidden=!gm.hidden;gb.setAttribute('aria-expanded',String(!gm.hidden))};
+document.addEventListener('click',closeGh);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeGh()});
+
+const MOON='<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
+const SUN='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+const setTheme=t=>{document.documentElement.dataset.theme=t;try{localStorage.setItem('theme',t)}catch(_){}$('#themeBtn').innerHTML=t==='dark'?MOON:SUN};
+setTheme(document.documentElement.dataset.theme==='light'?'light':'dark');
+$('#themeBtn').onclick=()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark');
+
+const STAR='<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg>';
+const FORK='<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="5" r="2"/><circle cx="18" cy="5" r="2"/><circle cx="12" cy="19" r="2"/><path d="M6 7v2a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V7M12 12v5"/></svg>';
+const PROJ=[['SaltyOS',REPOS.os],['ABLauncher',REPOS.ab],['Salty-OS Installer',REPOS.inst]];
+$('#projects').innerHTML=PROJ.map(([n,r],i)=>'<a class="proj" href="https://github.com/'+r+'" target="_blank" rel="noopener"><b>'+n+'</b><span class="st">'+STAR+'<i id="st'+i+'">—</i>'+FORK+'<i id="fk'+i+'">—</i></span></a>').join('');
+PROJ.forEach(([n,r],i)=>fetch('https://api.github.com/repos/'+r).then(x=>x.ok?x.json():Promise.reject()).then(j=>{$('#st'+i).textContent=j.stargazers_count;$('#fk'+i).textContent=j.forks_count}).catch(()=>{}));
+
+render();applyLang();
 </script>
 </body>
 </html>
