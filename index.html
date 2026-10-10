@@ -506,7 +506,7 @@ document.querySelectorAll('.connectBtn').forEach(b=>b.onclick=doConnect);
 /* ===== SaltyOS & ABLauncher ===== */
 for(const[k,r]of[['osTag',REPOS.os],['abTag',REPOS.ab]])latest(r).then(j=>$('#'+k).textContent=j.tag_name).catch(()=>$('#'+k).textContent='—');
 $('#go-os').onclick=async()=>{try{
-  const buf=await getAsset(REPOS.os,'userland.allow3rdparty.B.'+devModel+'.dfu');
+  const buf=await getAsset(REPOS.os,'userland.onboarding.allow3rdparty.B.'+devModel+'.dfu');
   flash(parseDfu(buf),'os','');
 }catch(e){$('#t-os').textContent=e.message;log(e.message,'error')}};
 $('#go-app').onclick=async()=>{

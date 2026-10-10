@@ -14,7 +14,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release download --repo SaltyMold/Salty-OS --pattern 'userland.allow3rdparty.B.*.dfu' --dir assets --clobber
+          gh release download --repo SaltyMold/Salty-OS --pattern 'userland.onboarding.allow3rdparty.B.*.dfu' --dir assets --clobber
           gh release download --repo SaltyMold/ABLauncher-Numworks --pattern '*.nwa' --dir assets --clobber
       - name: Commit si changement
         run: |
