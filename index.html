@@ -706,7 +706,7 @@ $('#tNew').onclick=async()=>{
 $('#tDup').onclick=()=>addTheme({...T,name:(T.name.slice(0,12)+' 2').trim(),pal:T.pal.map(p=>({...p})),icons:[...T.icons],src:null});
 
 /* ----- Thèmes de base : themes/{id}.zip (ajoute une entrée pour en proposer d'autres) ----- */
-const PRESETS=[{id:'omega',name:'Omega'},{id:'kawaii',name:'Kawaii'}];
+const PRESETS=[{id:'omega',name:'Omega'},{id:'kawaii',name:'Kawaii'},{id:'yue',name:'Yue'}];
 $('#presets').innerHTML=PRESETS.map(p=>'<button class="ghost pre" data-pr="'+p.id+'">'+escH(p.name)+'</button>').join('');
 const _zc={};
 async function getZip(id){
