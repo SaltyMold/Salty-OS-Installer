@@ -235,7 +235,7 @@ select,input[type=text]{font:inherit;padding:8px 10px;border:1px solid var(--lin
     <div class="card" id="tmgr">
       <div class="thead">
         <h2><span data-i="myThemes"></span> <small id="tCount"></small></h2>
-        <div class="tmeter" id="tMeter" role="progressbar" aria-valuemin="0" aria-valuemax="2048" aria-valuenow="0">
+        <div class="tmeter" id="tMeter" role="progressbar" aria-valuemin="0" aria-valuemax="1536" aria-valuenow="0">
           <div class="tmtop"><span data-i="space"></span><b id="tMeterTxt"></b></div>
           <div class="tmbar"><i id="tMeterFill"></i></div>
         </div>
@@ -289,7 +289,7 @@ select,input[type=text]{font:inherit;padding:8px 10px;border:1px solid var(--lin
 <script>
 const $=s=>document.querySelector(s);
 const IDS=[{vendorId:0x0483,productId:0xDF11},{vendorId:0x0483,productId:0xA291},{vendorId:0x0483,productId:0xA51A}];
-const PAGE=0x1000, THEME_ADDR=0x901F0000, THEME_MAX=2*1024*1024;
+const PAGE=0x1000, THEME_ADDR=0x90270000, THEME_MAX=0x180000;
 let dev=null,busy=false,devModel=null,devSerial='';
 
 const LANGS={"fr": {"tApp": "Applications", "tTheme": "Thèmes", "connect": "Connecter", "off": "Non connectée", "busy": "En cours…", "installOS": "Installer SaltyOS", "installApp": "Installer ABLauncher", "installTheme": "Installer", "imp": "Importer zip", "exp": "Enregistrer zip", "name": "Nom", "circle": "Cercle", "hover": "Fond au survol", "palette": "Palette", "wall": "Fond d'écran", "icons": "Icônes", "choose": "Choisir", "none": "Aucun", "noUsb": "WebUSB indisponible", "disc": "Déconnectée", "connFail": "Connexion impossible : ", "fail": "Échec : ", "erase": "Effacement", "write": "Écriture", "done": "Terminé", "dfuErr": "Erreur DFU", "badDfu": "Fichier .dfu invalide", "tooBig": "Thèmes trop volumineux", "kib": "Kio", "missing": "Fichier manquant : ", "notFound": " introuvable", "dlFail": "Téléchargement impossible", "readFail": "Lecture impossible", "noExt": "Firmware incompatible", "badHdr": "Firmware corrompu", "dl": "Téléchargement…", "read": "Lecture…", "link": "Liaison…", "noSpace": "Espace insuffisant", "badZip": "Zip invalide", "badPal": "Palette invalide", "needName": "Nom requis", "badImg": "Image illisible"}, "en": {"tApp": "Apps", "tTheme": "Themes", "connect": "Connect", "off": "Not connected", "busy": "Working…", "installOS": "Install SaltyOS", "installApp": "Install ABLauncher", "installTheme": "Install", "imp": "Import zip", "exp": "Save zip", "name": "Name", "circle": "Circle", "hover": "Hover background", "palette": "Palette", "wall": "Wallpaper", "icons": "Icons", "choose": "Choose", "none": "None", "noUsb": "WebUSB unavailable", "disc": "Disconnected", "connFail": "Connection failed: ", "fail": "Failed: ", "erase": "Erasing", "write": "Writing", "done": "Done", "dfuErr": "DFU error", "badDfu": "Invalid .dfu file", "tooBig": "Themes too large", "kib": "KiB", "missing": "Missing file: ", "notFound": " not found", "dlFail": "Download failed", "readFail": "Read failed", "noExt": "Incompatible firmware", "badHdr": "Corrupted firmware", "dl": "Downloading…", "read": "Reading…", "link": "Linking…", "noSpace": "Not enough space", "badZip": "Invalid zip", "badPal": "Invalid palette", "needName": "Name required", "badImg": "Unreadable image"}};
@@ -407,7 +407,7 @@ function packArea(themes){
     ents.push(new Uint8Array(e.buffer));
   }
   if(cur>THEME_MAX)throw new Error(tr('tooBig')+' ('+(cur/1024).toFixed(1)+' / '+(THEME_MAX/1024)+' '+tr('kib')+')');
-  const raw=cat([u32(0x87654321,3,themes.length),...ents,...blobs]);
+  const raw=cat([u32(0x87654321,4,themes.length),...ents,...blobs]);
   const pad=new Uint8Array(Math.ceil(raw.length/PAGE)*PAGE);pad.set(raw);return pad;
 }
 
@@ -671,7 +671,7 @@ async function themeFromZip(buf){
   return nt;
 }
 
-/* ----- Liste de thèmes (seule limite : 2 Mio au total) ----- */
+/* ----- Liste de thèmes (seule limite : 1,5 Mio au total) ----- */
 const escH=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function renderList(){
   $('#tCount').textContent='('+THEMES.length+')';
